@@ -20,17 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # TEMPORAL: diagnóstico OIDC. Muestra solo los claims, nunca el token.
-      - name: Debug OIDC claims
-        env:
-          ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
-        run: |
-          TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com" | jq -r .value)
-          echo "$TOKEN" | python3 -c "import sys,json,base64;p=sys.stdin.read().split('.')[1];p+='='*(-len(p)%4);c=json.loads(base64.urlsafe_b64decode(p));print(json.dumps({k:c.get(k) for k in ['sub','aud','iss','repository','ref','event_name']},indent=2))"
-          echo "Role ARN (cuenta y nombre): $(echo "$ROLE_ARN" | sed -E 's/^arn:aws:iam::([0-9]+):role\/(.*)$/cuenta=\1 rol=\2/' | tr -d '\n' | sed 's/./& /g')"
-          echo "Longitud ARN: ${#ROLE_ARN}"
-
       - name: Configurar credenciales AWS (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
