@@ -34,8 +34,23 @@ jobs:
             --cache-control "public, max-age=0, must-revalidate"
           # Resto de assets con caché larga
           aws s3 sync site/ "s3://${{ vars.S3_BUCKET }}" --delete \
-            --exclude "*.html" --exclude "cv.pdf" \
+            --exclude "*.html" --exclude "cv.pdf" --exclude "CV" --exclude "cv" \
             --cache-control "public, max-age=31536000, immutable"
+
+      - name: Publicar CV (/cv.pdf, /CV y /cv)
+        run: |
+          B="s3://${{ vars.S3_BUCKET }}"
+          # /cv.pdf: se abre en el navegador
+          aws s3 cp site/cv.pdf "$B/cv.pdf" \
+            --content-type application/pdf \
+            --cache-control "public, max-age=300"
+          # /CV y /cv: descarga directa con nombre de archivo
+          for key in CV cv; do
+            aws s3 cp site/cv.pdf "$B/$key" \
+              --content-type application/pdf \
+              --content-disposition 'attachment; filename="Cristian_Estrada_CV.pdf"' \
+              --cache-control "public, max-age=300"
+          done
 
       - name: Invalidar CloudFront
         run: |
