@@ -185,7 +185,12 @@
     position: absolute; inset: 0; display: grid; place-items: center; padding: 1.5rem;
     font: 400 .875rem/1.9 var(--f-mono); color: var(--graphite); text-align: center;
   }
-  .topo-fallback[hidden] { display: none; }
+  .topo-stage .topo-fallback { display: none; }
+  .topo-stage.no-webgl .topo-fallback { display: grid; }
+  .viz { margin-top: 1.5rem; border: 1px solid var(--rule); border-radius: 10px; background: color-mix(in srgb, var(--sheet) 70%, transparent); overflow: hidden; }
+  .viz-stage { aspect-ratio: 16 / 8.5; }
+  .viz figcaption { border-top: 1px solid var(--rule); padding: .65rem .9rem; font-size: .875rem; color: var(--graphite); }
+  .viz-stage.no-webgl { display: none; }
   .topo-cap {
     border-top: 1px solid var(--rule); padding: .9rem 1.1rem 1rem;
     display: grid; gap: .75rem;
@@ -230,22 +235,6 @@
   .impact b { display: block; font: 600 1.375rem/1.2 var(--f-display); color: var(--ink); }
   .impact span { font-size: .875rem; color: var(--graphite); }
   .tags { display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin-top: 1.25rem; font: 400 .8125rem/1.5 var(--f-mono); color: var(--graphite); list-style: none; }
-  details.arch { margin-top: 1.5rem; border: 1px solid var(--rule); border-radius: 8px; background: var(--sheet); }
-  details.arch summary {
-    cursor: pointer; list-style: none; padding: .7rem 1rem;
-    display: flex; align-items: center; gap: .65rem; font-size: .9375rem; font-weight: 500;
-  }
-  details.arch summary::-webkit-details-marker { display: none; }
-  details.arch summary::before {
-    content: ''; width: 7px; height: 7px; border-right: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink);
-    transform: rotate(-45deg); transition: transform .2s;
-  }
-  details.arch[open] summary::before { transform: rotate(45deg); }
-  details.arch pre {
-    margin: 0; padding: 1rem 1.1rem 1.2rem; border-top: 1px solid var(--rule);
-    font: 400 clamp(.6875rem, 1.6vw, .8125rem)/1.65 var(--f-mono); color: var(--graphite);
-    overflow-x: auto;
-  }
 
   /* Experiencia: línea de tiempo */
   .timeline { list-style: none; }
@@ -322,6 +311,8 @@
     .stack { grid-template-columns: minmax(0, 1fr); }
     .timings { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: .75rem; }
     .topo-stage { aspect-ratio: 1 / 1; }
+    .viz-stage { aspect-ratio: 4 / 4.6; }
+    .viz-stage .topo-label { font-size: .6875rem; padding: .15rem .35rem; }
     .actions .btn { flex: 1 1 auto; justify-content: center; }
     .about-text p { font-size: 1.0625rem; }
     .hero h1 { font-size: clamp(3.25rem, 19vw, 5rem); }
@@ -384,9 +375,8 @@
       </div>
 
       <figure class="topo" aria-labelledby="topo-cap">
-        <div class="topo-stage" id="topo-stage">
-          <canvas id="topo-canvas" aria-hidden="true"></canvas>
-          <div class="topo-fallback" id="topo-fallback" hidden>Tú → Route 53 → CloudFront → S3<br>GitHub Actions → S3</div>
+        <div class="topo-stage" data-scene="hero">
+          <div class="topo-fallback">Tú → Route 53 → CloudFront → S3<br>GitHub Actions → S3</div>
         </div>
         <figcaption class="topo-cap" id="topo-cap">
           <p data-i18n="topo.cap"><strong>Así te llegó esta página.</strong> Tu navegador resolvió el dominio en Route 53 y CloudFront te la entregó desde el edge más cercano. Cada push a GitHub la vuelve a desplegar en S3.</p>
@@ -425,15 +415,10 @@
               <li><b>2,500+</b><span data-i18n="p.asepad.i2">certificados verificables</span></li>
               <li><b>&lt;200 ms</b><span data-i18n="p.asepad.i3">por verificación</span></li>
             </ul>
-            <details class="arch">
-              <summary data-i18n="arch.toggle">Ver arquitectura</summary>
-<pre>Cloudflare Tunnel  (sin puertos expuestos)
-        │
-   Nginx  (reverse proxy)
-        ├── Frontend   · React
-        ├── Backend    · Node.js
-        └── PostgreSQL · contenedor con backups</pre>
-            </details>
+            <figure class="viz">
+              <div class="topo-stage viz-stage" data-scene="asepad"></div>
+              <figcaption data-i18n="viz.asepad">Empresa → Cloudflare Tunnel → Nginx → contenedores de React y Node.js → PostgreSQL</figcaption>
+            </figure>
             <ul class="tags"><li>docker</li><li>nginx</li><li>postgresql</li><li>react</li><li>node.js</li><li>cloudflare</li></ul>
           </div>
         </article>
@@ -452,16 +437,10 @@
               <li><b>300–400</b><span data-i18n="p.ejv.i2">personas por asamblea</span></li>
               <li><b>&lt;200 ms</b><span data-i18n="p.ejv.i3">de sincronización</span></li>
             </ul>
-            <details class="arch">
-              <summary data-i18n="arch.toggle">Ver arquitectura</summary>
-<pre>App móvil  ⇄  Firebase (Auth + Realtime DB)
-                   │
-Panel web  ⇄  Backend Node.js (Docker)
-                   │
-             Nginx (reverse proxy)
-                   │
-             PostgreSQL (Docker)</pre>
-            </details>
+            <figure class="viz">
+              <div class="topo-stage viz-stage" data-scene="eventosjv"></div>
+              <figcaption data-i18n="viz.ejv">App móvil y panel web → Nginx y Firebase en tiempo real → backend Node.js → PostgreSQL y actas en PDF</figcaption>
+            </figure>
             <ul class="tags"><li>react</li><li>react-native</li><li>firebase</li><li>node.js</li><li>postgresql</li><li>docker</li></ul>
           </div>
         </article>
@@ -476,16 +455,10 @@ Panel web  ⇄  Backend Node.js (Docker)
           </div>
           <div class="project-body">
             <p data-i18n="p.duts.desc">Tienda de cupcakes y galletas con commerce headless: Snipcart maneja carrito y checkout, y las reseñas corren en funciones serverless sin servidores que mantener.</p>
-            <details class="arch">
-              <summary data-i18n="arch.toggle">Ver arquitectura</summary>
-<pre>Frontend (React) ── Snipcart (carrito + checkout)
-        │
-   Cloudflare (CDN + seguridad)
-        │
-   API Gateway ── Lambda
-        │
-   DynamoDB (reseñas)</pre>
-            </details>
+            <figure class="viz">
+              <div class="topo-stage viz-stage" data-scene="dutsicakes"></div>
+              <figcaption data-i18n="viz.duts">Cliente → Cloudflare CDN → tienda en React → Snipcart para el checkout y API Gateway → Lambda → DynamoDB para las reseñas</figcaption>
+            </figure>
             <ul class="tags"><li>react</li><li>snipcart</li><li>aws-lambda</li><li>api-gateway</li><li>dynamodb</li></ul>
           </div>
         </article>
@@ -500,16 +473,10 @@ Panel web  ⇄  Backend Node.js (Docker)
           </div>
           <div class="project-body">
             <p data-i18n="p.site.desc">HTML estático en S3 detrás de CloudFront, con DNS en Route 53 y certificado de ACM. GitHub Actions despliega con OIDC: no hay llaves de AWS guardadas en ningún lado.</p>
-            <details class="arch">
-              <summary data-i18n="arch.toggle">Ver arquitectura</summary>
-<pre>git push main
-   │
-GitHub Actions ── OIDC ──▶ IAM role (solo este repo y rama)
-   │
-aws s3 sync ──▶ S3 ──▶ CloudFront (invalidación)
-                         ▲
-Visitante ── Route 53 ───┘   TLS: ACM</pre>
-            </details>
+            <figure class="viz">
+              <div class="topo-stage viz-stage" data-scene="site"></div>
+              <figcaption data-i18n="viz.site">GitHub Actions → OIDC → IAM → S3 → CloudFront; el visitante resuelve con Route 53 y recibe la página desde CloudFront</figcaption>
+            </figure>
             <ul class="tags"><li>aws-s3</li><li>cloudfront</li><li>route-53</li><li>github-actions</li><li>oidc</li><li>three.js</li></ul>
           </div>
         </article>
@@ -706,7 +673,10 @@ Visitante ── Route 53 ───┘   TLS: ACM</pre>
     'projects.title': 'Projects',
     'projects.intro': 'Production systems where I can show the architecture. Most of my professional work lives in private repositories.',
     'badge.live': 'Live', 'badge.private': 'Private client app', 'badge.open': 'Open source',
-    'arch.toggle': 'Show architecture',
+    'viz.asepad': 'Company → Cloudflare Tunnel → Nginx → React and Node.js containers → PostgreSQL',
+    'viz.ejv': 'Mobile app and web panel → Nginx and Firebase realtime → Node.js backend → PostgreSQL and PDF minutes',
+    'viz.duts': 'Customer → Cloudflare CDN → React store → Snipcart for checkout, and API Gateway → Lambda → DynamoDB for reviews',
+    'viz.site': 'GitHub Actions → OIDC → IAM → S3 → CloudFront; visitors resolve through Route 53 and get the page from CloudFront',
     'p.asepad.desc': 'Issuing and verifying occupational-safety certificates. Any company can check in seconds whether a certificate is authentic.',
     'p.asepad.i1b': '1 week → minutes', 'p.asepad.i1': 'to issue a certificate', 'p.asepad.i2': 'verifiable certificates', 'p.asepad.i3': 'per verification',
     'p.ejv.desc': 'Assembly management for residential properties: attendance, voting and live statistics, with a mobile app and web panel synced in real time and PDF minutes.',
@@ -865,175 +835,472 @@ Visitante ── Route 53 ───┘   TLS: ACM</pre>
 { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
 </script>
 <script type="module">
-  /* ---------- Topología 3D (Three.js) ---------- */
-  const stage = document.getElementById('topo-stage');
-  const canvas = document.getElementById('topo-canvas');
-  const fallback = () => { document.getElementById('topo-fallback').hidden = false; canvas.remove(); };
+  /* ---------- Diagramas 3D animados (Three.js) ---------- */
+  let THREE;
+  try { THREE = await import('three'); } catch (e) { THREE = null; }
 
-  let THREE, renderer;
-  try {
-    THREE = await import('three');
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  } catch (e) { fallback(); }
-
-  if (renderer) init();
-
-  function init() {
+  const stages = [...document.querySelectorAll('[data-scene]')];
+  if (!THREE) {
+    stages.forEach((s) => s.classList.add('no-webgl'));
+  } else {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
     const css = () => getComputedStyle(document.documentElement);
     const col = (v) => new THREE.Color(css().getPropertyValue(v).trim());
+    const L = (es, en) => ({ es, en: en || es });
 
-    const world = new THREE.Group();
-    scene.add(world);
-
-    const N = {
-      you: { p: [-4.0,  0.3,  1.4], label: { es: 'Tú', en: 'You' }, kind: 'you' },
-      r53: { p: [-1.5,  1.7, -0.9], label: { es: 'Route 53', en: 'Route 53' } },
-      cf:  { p: [ 0.9,  0.1,  0.8], label: { es: 'CloudFront', en: 'CloudFront' } },
-      s3:  { p: [ 3.7, -0.3, -0.9], label: { es: 'S3', en: 'S3' } },
-      gh:  { p: [ 2.0, -2.1,  2.0], label: { es: 'GitHub Actions', en: 'GitHub Actions' } },
+    /* ===== Materiales compartidos (se recolorean al cambiar tema) ===== */
+    const M = {
+      ink: new THREE.LineBasicMaterial(),
+      fill: new THREE.MeshBasicMaterial({ polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }),
+      fill2: new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }),
+      solid: new THREE.MeshBasicMaterial(),
+      edge: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 }),
+      dash: new THREE.LineDashedMaterial({ dashSize: 0.16, gapSize: 0.12, transparent: true, opacity: 0.6 }),
+      packet: new THREE.MeshBasicMaterial(),
+      grid: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.4 }),
     };
-    const edges = [
-      { a: 'you', b: 'r53', k: 'req' },
-      { a: 'r53', b: 'cf',  k: 'req' },
-      { a: 'you', b: 'cf',  k: 'req' },
-      { a: 'cf',  b: 's3',  k: 'req' },
-      { a: 'gh',  b: 's3',  k: 'deploy' },
-      { a: 'gh',  b: 'cf',  k: 'deploy' },
-    ];
-
-    const lineMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 });
-    const dashMat = new THREE.LineDashedMaterial({ dashSize: 0.18, gapSize: 0.14, transparent: true, opacity: 0.6 });
-    const nodeMat = new THREE.LineBasicMaterial();
-    const youMat = new THREE.MeshBasicMaterial();
-    const packetMat = new THREE.MeshBasicMaterial();
-    const gridMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.45 });
-    const FLOOR = -3.0;
-
-    const grid = new THREE.GridHelper(13, 13);
-    grid.material = gridMat;
-    grid.position.y = FLOOR;
-    world.add(grid);
-
-    for (const n of Object.values(N)) {
-      n.v = new THREE.Vector3(...n.p);
-      n.obj = n.kind === 'you'
-        ? new THREE.Mesh(new THREE.SphereGeometry(0.3, 24, 16), youMat)
-        : new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(0.8, 0.8, 0.8)), nodeMat);
-      n.obj.position.copy(n.v);
-      world.add(n.obj);
-      world.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([n.v, new THREE.Vector3(n.v.x, FLOOR, n.v.z)]), gridMat));
-    }
-
-    for (const e of edges) {
-      const A = N[e.a].v, B = N[e.b].v;
-      const mid = A.clone().add(B).multiplyScalar(0.5); mid.y += 0.6;
-      e.curve = new THREE.QuadraticBezierCurve3(A, mid, B);
-      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(e.curve.getPoints(48)), e.k === 'deploy' ? dashMat : lineMat);
-      if (e.k === 'deploy') line.computeLineDistances();
-      world.add(line);
-    }
-
-    const packetGeo = new THREE.SphereGeometry(0.08, 12, 8);
-    const packets = [];
-    edges.forEach((e, i) => {
-      const count = e.k === 'deploy' ? 1 : 2;
-      for (let j = 0; j < count; j++) {
-        const m = new THREE.Mesh(packetGeo, packetMat);
-        world.add(m);
-        packets.push({ m, e, t: (j / count + i * 0.17) % 1, speed: e.k === 'deploy' ? 0.12 : 0.22 + (i % 3) * 0.03 });
-      }
-    });
-
-    const labels = {};
-    for (const [id, n] of Object.entries(N)) {
-      const el = document.createElement('div');
-      el.className = 'topo-label' + (n.kind === 'you' ? ' is-you' : '');
-      el.textContent = n.label[document.documentElement.lang === 'en' ? 'en' : 'es'];
-      stage.appendChild(el);
-      labels[id] = el;
-    }
-    document.addEventListener('langchange', (ev) => {
-      for (const [id, n] of Object.entries(N)) labels[id].textContent = n.label[ev.detail];
-      if (reduce) render();
-    });
-
     function applyColors() {
-      lineMat.color.copy(col('--graphite')); dashMat.color.copy(col('--graphite'));
-      nodeMat.color.copy(col('--ink')); youMat.color.copy(col('--ink'));
-      packetMat.color.copy(col('--signal')); gridMat.color.copy(col('--rule'));
+      M.ink.color.copy(col('--ink')); M.solid.color.copy(col('--ink'));
+      M.fill.color.copy(col('--sheet')); M.fill2.color.copy(col('--sheet'));
+      M.edge.color.copy(col('--graphite')); M.dash.color.copy(col('--graphite'));
+      M.packet.color.copy(col('--signal')); M.grid.color.copy(col('--rule'));
     }
     applyColors();
-    document.addEventListener('themechange', () => { applyColors(); if (reduce) render(); });
 
-    function resize() {
-      const w = stage.clientWidth, h = stage.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      const dist = w / h < 1.1 ? 15.5 : 12;
-      camera.position.set(0, 2.6, dist);
-      camera.lookAt(0, -0.2, 0);
-      camera.updateProjectionMatrix();
+    /* ===== Utilidades de dibujo ===== */
+    const V = (x, y, z = 0) => new THREE.Vector3(x, y, z);
+    function solid(geo, edgeAngle = 25) {
+      const g = new THREE.Group();
+      g.add(new THREE.Mesh(geo, M.fill));
+      g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, edgeAngle), M.ink));
+      return g;
     }
-
-    let yaw = -0.3, pitch = 0, targetYaw = yaw, targetPitch = 0, dragging = false, lastX = 0, lastY = 0, idle = 0;
-    stage.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; stage.setPointerCapture(e.pointerId); });
-    stage.addEventListener('pointermove', (e) => {
-      if (!dragging) return;
-      targetYaw += (e.clientX - lastX) * 0.008;
-      targetPitch = Math.max(-0.3, Math.min(0.3, targetPitch + (e.clientY - lastY) * 0.004));
-      lastX = e.clientX; lastY = e.clientY; idle = 0;
-      if (reduce) { yaw = targetYaw; pitch = targetPitch; render(); }
-    });
-    const end = () => { dragging = false; };
-    stage.addEventListener('pointerup', end);
-    stage.addEventListener('pointercancel', end);
-
-    const tmp = new THREE.Vector3();
-    function placeLabels() {
-      const w = stage.clientWidth, h = stage.clientHeight;
-      for (const [id, n] of Object.entries(N)) {
-        n.obj.getWorldPosition(tmp);
-        tmp.y += n.kind === 'you' ? 0.62 : 0.78;
-        tmp.project(camera);
-        labels[id].style.transform = `translate(${(tmp.x * 0.5 + 0.5) * w}px, ${(-tmp.y * 0.5 + 0.5) * h}px) translate(-50%, -100%)`;
+    function seg(pairs) { // [[a,b],[c,d],...] -> LineSegments
+      const pts = []; pairs.forEach(([a, b]) => pts.push(a, b));
+      return new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts), M.ink);
+    }
+    function poly(points, closed = false) {
+      const p = closed ? [...points, points[0]] : points;
+      return new THREE.Line(new THREE.BufferGeometry().setFromPoints(p), M.ink);
+    }
+    function ring(r, axis = 'y', n = 48, y = 0) {
+      const pts = [];
+      for (let i = 0; i <= n; i++) {
+        const t = (i / n) * Math.PI * 2, a = Math.cos(t) * r, b = Math.sin(t) * r;
+        pts.push(axis === 'y' ? V(a, y, b) : axis === 'z' ? V(a, b, y) : V(y, a, b));
       }
+      return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), M.ink);
+    }
+    function extrude(shape, depth) {
+      const geo = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 16 });
+      geo.translate(0, 0, -depth / 2);
+      return solid(geo, 30);
+    }
+    function shapeFrom(pts) { const s = new THREE.Shape(); s.moveTo(...pts[0]); pts.slice(1).forEach((p) => s.lineTo(...p)); s.closePath(); return s; }
+    function roundRect(w, h, r) {
+      const s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+      s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+      s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+      s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+      return s;
     }
 
-    function render() {
-      world.rotation.y = yaw;
-      world.rotation.x = pitch;
-      renderer.render(scene, camera);
-      placeLabels();
-    }
+    /* ===== Íconos por tipo de elemento =====
+       Cada uno devuelve { obj, h } donde h es la altura para ubicar la etiqueta. */
+    const ICON = {
+      // Navegador / visitante: monitor con base
+      monitor() {
+        const g = new THREE.Group();
+        const scr = solid(new THREE.BoxGeometry(1.15, 0.72, 0.06)); scr.position.y = 0.42; g.add(scr);
+        const inner = poly([V(-0.5, 0.12, 0.031), V(0.5, 0.12, 0.031), V(0.5, 0.72, 0.031), V(-0.5, 0.72, 0.031)], true); g.add(inner);
+        g.add(seg([[V(-0.5, 0.64, 0.031), V(0.5, 0.64, 0.031)]]));
+        const neck = solid(new THREE.BoxGeometry(0.08, 0.22, 0.06)); neck.position.y = -0.04; g.add(neck);
+        const base = solid(new THREE.BoxGeometry(0.5, 0.04, 0.28)); base.position.y = -0.16; g.add(base);
+        g.position.y = -0.2;
+        return { obj: g, h: 0.75 };
+      },
+      // Ventana de navegador (una app web)
+      window() {
+        const g = new THREE.Group();
+        g.add(solid(new THREE.BoxGeometry(1.1, 0.75, 0.05)));
+        g.add(seg([[V(-0.55, 0.25, 0.026), V(0.55, 0.25, 0.026)]]));
+        [-0.45, -0.37, -0.29].forEach((x) => { const r = ring(0.025, 'z', 12, 0.027); r.position.set(x, 0.31, 0); g.add(r); });
+        g.add(seg([[V(-0.42, 0.08, 0.026), V(0.2, 0.08, 0.026)], [V(-0.42, -0.06, 0.026), V(0.35, -0.06, 0.026)], [V(-0.42, -0.2, 0.026), V(0.05, -0.2, 0.026)]]));
+        return { obj: g, h: 0.55 };
+      },
+      // Teléfono
+      phone() {
+        const g = extrude(roundRect(0.46, 0.86, 0.07), 0.06);
+        g.add(poly([V(-0.18, -0.3, 0.031), V(0.18, -0.3, 0.031), V(0.18, 0.34, 0.031), V(-0.18, 0.34, 0.031)], true));
+        const btn = ring(0.03, 'z', 12, 0.031); btn.position.y = -0.36; g.add(btn);
+        return { obj: g, h: 0.62 };
+      },
+      // CDN / edge: globo con meridianos
+      globe() {
+        const g = new THREE.Group();
+        g.add(new THREE.Mesh(new THREE.SphereGeometry(0.45, 24, 16), M.fill));
+        g.add(ring(0.45, 'y'));
+        [0.28, -0.28].forEach((y) => g.add(ring(Math.sqrt(0.45 ** 2 - y ** 2), 'y', 40, y)));
+        [0, Math.PI / 4, Math.PI / 2, (3 * Math.PI) / 4].forEach((a) => { const m = ring(0.45, 'z'); m.rotation.y = a; g.add(m); });
+        return { obj: g, h: 0.7 };
+      },
+      // Túnel cifrado: tubo abierto
+      tunnel() {
+        const g = new THREE.Group();
+        const geo = new THREE.CylinderGeometry(0.32, 0.32, 1.1, 28, 1, true); geo.rotateZ(Math.PI / 2);
+        g.add(new THREE.Mesh(geo, M.fill2));
+        [-0.55, -0.18, 0.18, 0.55].forEach((x) => g.add(ring(0.32, 'x', 32, x)));
+        g.add(seg([[V(-0.55, 0.32, 0), V(0.55, 0.32, 0)], [V(-0.55, -0.32, 0), V(0.55, -0.32, 0)], [V(-0.55, 0, 0.32), V(0.55, 0, 0.32)]]));
+        return { obj: g, h: 0.6 };
+      },
+      // Reverse proxy / router: disco con flechas cruzadas
+      router() {
+        const g = solid(new THREE.CylinderGeometry(0.52, 0.52, 0.2, 32), 30);
+        const y = 0.101, a = 0.3, h = 0.09;
+        g.add(seg([
+          [V(-a, y, -a), V(a, y, a)], [V(a, y, a), V(a - h, y, a)], [V(a, y, a), V(a, y, a - h)],
+          [V(a, y, -a), V(-a, y, a)], [V(-a, y, a), V(-a + h, y, a)], [V(-a, y, a), V(-a, y, a - h)],
+        ]));
+        return { obj: g, h: 0.42 };
+      },
+      // Contenedor Docker: caja con nervaduras
+      container() {
+        const g = solid(new THREE.BoxGeometry(1.05, 0.5, 0.46));
+        const z = 0.231, xs = [-0.36, -0.18, 0, 0.18, 0.36];
+        g.add(seg(xs.map((x) => [V(x, -0.2, z), V(x, 0.2, z)])));
+        return { obj: g, h: 0.5 };
+      },
+      // Servidor: racks apilados
+      server() {
+        const g = new THREE.Group();
+        [-0.26, 0, 0.26].forEach((y) => {
+          const r = solid(new THREE.BoxGeometry(0.9, 0.22, 0.6)); r.position.y = y; g.add(r);
+          const led = new THREE.Mesh(new THREE.CircleGeometry(0.025, 10), M.solid); led.position.set(0.34, y, 0.301); g.add(led);
+          g.add(seg([[V(-0.38, y, 0.301), V(0.1, y, 0.301)]]));
+        });
+        return { obj: g, h: 0.55 };
+      },
+      // Base de datos: cilindros apilados
+      db() {
+        const g = new THREE.Group();
+        [-0.22, 0, 0.22].forEach((y) => { const c = solid(new THREE.CylinderGeometry(0.38, 0.38, 0.17, 32), 30); c.position.y = y; g.add(c); });
+        return { obj: g, h: 0.5 };
+      },
+      // Bucket S3: cubeta abierta
+      bucket() {
+        const g = new THREE.Group();
+        g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.32, 0.72, 32, 1, true), M.fill2));
+        g.add(ring(0.46, 'y', 40, 0.36)); g.add(ring(0.32, 'y', 40, -0.36));
+        g.add(ring(0.42, 'y', 40, 0.22));
+        g.add(seg([[V(-0.46, 0.36, 0), V(-0.32, -0.36, 0)], [V(0.46, 0.36, 0), V(0.32, -0.36, 0)]]));
+        return { obj: g, h: 0.55 };
+      },
+      // Función Lambda: λ
+      lambda() {
+        const s = shapeFrom([[-0.24, 0.46], [-0.04, 0.46], [0.42, -0.46], [0.21, -0.46], [0.04, -0.09], [-0.2, -0.46], [-0.41, -0.46], [-0.06, 0.2], [-0.13, 0.32], [-0.26, 0.32]]);
+        return { obj: extrude(s, 0.16), h: 0.62 };
+      },
+      // API Gateway: portal
+      gateway() {
+        const g = new THREE.Group();
+        [-0.36, 0.36].forEach((x) => { const p = solid(new THREE.BoxGeometry(0.14, 0.6, 0.22)); p.position.set(x, -0.2, 0); g.add(p); });
+        const arch = solid(new THREE.TorusGeometry(0.36, 0.07, 6, 24, Math.PI), 30); arch.position.y = 0.1; g.add(arch);
+        const key = solid(new THREE.BoxGeometry(0.12, 0.14, 0.24)); key.position.y = 0.47; g.add(key);
+        return { obj: g, h: 0.62 };
+      },
+      // Carrito de compras
+      cart() {
+        const g = new THREE.Group();
+        const basket = extrude(shapeFrom([[-0.38, 0.28], [0.46, 0.28], [0.34, -0.1], [-0.28, -0.1]]), 0.34);
+        g.add(basket);
+        g.add(seg([[V(-0.38, 0.28, 0.17), V(-0.56, 0.44, 0.17)], [V(-0.38, 0.28, -0.17), V(-0.56, 0.44, -0.17)], [V(-0.56, 0.44, 0.17), V(-0.56, 0.44, -0.17)]]));
+        [[-0.2, 0.15], [-0.2, -0.15], [0.26, 0.15], [0.26, -0.15]].forEach(([x, z]) => { const w = ring(0.06, 'z', 14); w.position.set(x, -0.2, z); g.add(w); });
+        return { obj: g, h: 0.55 };
+      },
+      // Candado: IAM / OIDC / TLS
+      lock() {
+        const g = new THREE.Group();
+        g.add(solid(new THREE.BoxGeometry(0.56, 0.46, 0.2)));
+        const sh = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.035, 8, 20, Math.PI), M.solid); sh.position.y = 0.23; g.add(sh);
+        const hole = ring(0.04, 'z', 12, 0.101); hole.position.y = 0.04; g.add(hole);
+        g.add(seg([[V(0, 0.0, 0.101), V(0, -0.1, 0.101)]]));
+        g.position.y = -0.1;
+        return { obj: g, h: 0.55 };
+      },
+      // DNS: poste con señales
+      signpost() {
+        const g = new THREE.Group();
+        const pole = solid(new THREE.CylinderGeometry(0.035, 0.035, 1.2, 10), 40); pole.position.y = -0.05; g.add(pole);
+        g.add(seg([[V(-0.035, -0.65, 0), V(-0.035, 0.55, 0)], [V(0.035, -0.65, 0), V(0.035, 0.55, 0)]]));
+        const a = extrude(shapeFrom([[0, 0.1], [0.5, 0.1], [0.62, 0], [0.5, -0.1], [0, -0.1]]), 0.05); a.position.set(0.04, 0.35, 0); g.add(a);
+        const b = extrude(shapeFrom([[0, 0.1], [-0.5, 0.1], [-0.62, 0], [-0.5, -0.1], [0, -0.1]]), 0.05); b.position.set(-0.04, 0.08, 0); g.add(b);
+        return { obj: g, h: 0.7 };
+      },
+      // CI/CD: engranaje
+      gear() {
+        const s = new THREE.Shape(), teeth = 10, r1 = 0.38, r2 = 0.5;
+        for (let i = 0; i < teeth * 2; i++) {
+          const a0 = (i / (teeth * 2)) * Math.PI * 2, a1 = ((i + 1) / (teeth * 2)) * Math.PI * 2, r = i % 2 ? r1 : r2;
+          const p0 = [Math.cos(a0) * r, Math.sin(a0) * r], p1 = [Math.cos(a1) * r, Math.sin(a1) * r];
+          if (i === 0) s.moveTo(...p0); else s.lineTo(...p0);
+          s.lineTo(...p1);
+        }
+        const hole = new THREE.Path(); hole.absarc(0, 0, 0.15, 0, Math.PI * 2, true); s.holes.push(hole);
+        return { obj: extrude(s, 0.16), h: 0.62, spin: 'z' };
+      },
+      // Documento PDF
+      doc() {
+        const g = extrude(shapeFrom([[-0.3, -0.42], [0.3, -0.42], [0.3, 0.26], [0.14, 0.42], [-0.3, 0.42]]), 0.04);
+        g.add(seg([[V(0.14, 0.42, 0.021), V(0.14, 0.26, 0.021)], [V(0.14, 0.26, 0.021), V(0.3, 0.26, 0.021)],
+          [V(-0.2, 0.14, 0.021), V(0.2, 0.14, 0.021)], [V(-0.2, 0.0, 0.021), V(0.2, 0.0, 0.021)], [V(-0.2, -0.14, 0.021), V(0.1, -0.14, 0.021)]]));
+        return { obj: g, h: 0.6 };
+      },
+      // Realtime DB (Firebase): base de datos con rayo de sincronía
+      realtime() {
+        const r = ICON.db();
+        const bolt = extrude(shapeFrom([[0.06, 0.2], [-0.1, -0.02], [0.0, -0.02], [-0.06, -0.2], [0.12, 0.04], [0.02, 0.04]]), 0.03);
+        bolt.position.set(0, 0.0, 0.4); r.obj.add(bolt);
+        return r;
+      },
+    };
 
-    let visible = true, running = false, last = 0;
-    function tick(now) {
-      if (!visible) { running = false; return; }
-      const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
-      idle += dt;
-      if (!dragging && idle > 2.5) targetYaw += dt * 0.12;
-      yaw += (targetYaw - yaw) * 0.08;
-      pitch += (targetPitch - pitch) * 0.08;
-      for (const p of packets) { p.t = (p.t + dt * p.speed) % 1; p.m.position.copy(p.e.curve.getPoint(p.t)); }
-      for (const n of Object.values(N)) if (n.kind !== 'you') n.obj.rotation.y += dt * 0.25;
+    /* ===== Escenas ===== */
+    const SCENES = {
+      hero: {
+        floor: -3.0, view: [-4.9, 4.9, -2.9, 2.5],
+        nodes: {
+          you: { icon: 'monitor', p: [-4.0, 0.2, 1.3], label: L('Tú', 'You'), you: true },
+          r53: { icon: 'signpost', p: [-1.5, 1.6, -0.9], label: L('Route 53') },
+          cf:  { icon: 'globe', p: [0.9, 0.1, 0.8], label: L('CloudFront') },
+          s3:  { icon: 'bucket', p: [3.7, -0.2, -0.9], label: L('S3') },
+          gh:  { icon: 'gear', p: [2.0, -2.0, 2.0], label: L('GitHub Actions') },
+        },
+        edges: [['you', 'r53'], ['r53', 'cf'], ['you', 'cf', 'both'], ['cf', 's3', 'both'], ['gh', 's3', 'deploy'], ['gh', 'cf', 'deploy']],
+      },
+      asepad: {
+        floor: -1.7, view: [-5.0, 5.0, -1.7, 1.9],
+        nodes: {
+          user: { icon: 'monitor', p: [-4.4, -0.4, 0.5], label: L('Empresa', 'Company'), you: true },
+          tun:  { icon: 'tunnel', p: [-2.2, 0.6, -0.4], label: L('Cloudflare Tunnel') },
+          ngx:  { icon: 'router', p: [-0.2, 0, 0.3], label: L('Nginx') },
+          fe:   { icon: 'container', p: [1.9, 1.0, -0.5], label: L('Frontend · React') },
+          be:   { icon: 'container', p: [1.9, -0.9, 0.9], label: L('Backend · Node.js') },
+          pg:   { icon: 'db', p: [4.2, -0.6, -0.2], label: L('PostgreSQL') },
+        },
+        edges: [['user', 'tun', 'both'], ['tun', 'ngx', 'both'], ['ngx', 'fe'], ['ngx', 'be', 'both'], ['be', 'pg', 'both']],
+      },
+      eventosjv: {
+        floor: -1.9, view: [-5.0, 5.0, -1.9, 2.0],
+        nodes: {
+          app:  { icon: 'phone', p: [-4.2, 0.9, 0.2], label: L('App móvil', 'Mobile app'), you: true },
+          web:  { icon: 'window', p: [-4.0, -1.0, 1.0], label: L('Panel web', 'Web panel'), you: true },
+          fb:   { icon: 'realtime', p: [-1.0, 1.3, -0.6], label: L('Firebase · tiempo real', 'Firebase · realtime') },
+          ngx:  { icon: 'router', p: [-1.3, -0.9, 0.6], label: L('Nginx') },
+          be:   { icon: 'container', p: [1.3, -0.2, 0.0], label: L('Backend · Node.js') },
+          pg:   { icon: 'db', p: [3.8, -0.9, 0.5], label: L('PostgreSQL') },
+          pdf:  { icon: 'doc', p: [3.6, 1.2, -0.6], label: L('Actas PDF', 'PDF minutes') },
+        },
+        edges: [['app', 'fb', 'both'], ['web', 'ngx', 'both'], ['ngx', 'be', 'both'], ['be', 'fb', 'both'], ['be', 'pg', 'both'], ['be', 'pdf']],
+      },
+      dutsicakes: {
+        floor: -1.8, view: [-5.0, 5.0, -1.8, 1.9],
+        nodes: {
+          cli:  { icon: 'phone', p: [-4.3, 0, 0.4], label: L('Cliente', 'Customer'), you: true },
+          cdn:  { icon: 'globe', p: [-2.3, 0.3, -0.3], label: L('Cloudflare CDN') },
+          fe:   { icon: 'window', p: [-0.3, 0, 0.3], label: L('Tienda · React', 'Store · React') },
+          cart: { icon: 'cart', p: [1.4, 1.3, -0.7], label: L('Snipcart') },
+          api:  { icon: 'gateway', p: [1.3, -1.0, 0.9], label: L('API Gateway') },
+          fn:   { icon: 'lambda', p: [3.0, -0.4, 0.0], label: L('Lambda') },
+          ddb:  { icon: 'db', p: [4.4, 0.7, -0.5], label: L('DynamoDB') },
+        },
+        edges: [['cli', 'cdn', 'both'], ['cdn', 'fe', 'both'], ['fe', 'cart', 'both'], ['fe', 'api', 'both'], ['api', 'fn', 'both'], ['fn', 'ddb', 'both']],
+      },
+      site: {
+        floor: -1.9, view: [-5.0, 5.0, -1.9, 2.0],
+        nodes: {
+          gh:   { icon: 'gear', p: [-4.0, 1.0, 0.0], label: L('GitHub Actions') },
+          iam:  { icon: 'lock', p: [-1.6, 1.4, -0.8], label: L('OIDC → IAM') },
+          s3:   { icon: 'bucket', p: [0.5, 0.4, 0.2], label: L('S3') },
+          cf:   { icon: 'globe', p: [2.6, -0.4, -0.3], label: L('CloudFront + ACM') },
+          r53:  { icon: 'signpost', p: [1.0, -1.3, 1.4], label: L('Route 53') },
+          you:  { icon: 'monitor', p: [4.3, -0.7, 1.0], label: L('Visitante', 'Visitor'), you: true },
+        },
+        edges: [['gh', 'iam', 'deploy'], ['gh', 's3', 'deploy'], ['s3', 'cf', 'both'], ['you', 'r53'], ['r53', 'cf'], ['you', 'cf', 'both']],
+      },
+    };
+
+    /* ===== Motor de escena ===== */
+    const live = [];
+    function build(stage) {
+      const def = SCENES[stage.dataset.scene];
+      if (!def) return;
+      const isHero = stage.dataset.scene === 'hero';
+      const portrait = !isHero && stage.clientWidth / Math.max(1, stage.clientHeight) < 1.1;
+      // En pantallas angostas el flujo va de arriba hacia abajo
+      const place = (p) => portrait ? [p[1] * 1.55, -p[0] * 0.66, p[2] * 0.6] : p;
+      const pts = Object.values(def.nodes).map((n) => place(n.p));
+      const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+      const view = isHero ? def.view : [Math.min(...xs) - 0.7, Math.max(...xs) + 0.7, Math.min(...ys) - 0.6, Math.max(...ys) + 0.9];
+      const floor = isHero ? def.floor : Math.min(...ys) - 0.9;
+      const scale = isHero ? 1.5 : portrait ? 1.1 : 1.25;
+      let renderer;
+      const canvas = document.createElement('canvas');
+      canvas.setAttribute('aria-hidden', 'true');
+      try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); }
+      catch (e) { stage.classList.add('no-webgl'); return; }
+      stage.prepend(canvas);
+      stage.classList.add('has-webgl');
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+      const world = new THREE.Group(); scene.add(world);
+
+      const grid = new THREE.GridHelper(12, 12); grid.material = M.grid; grid.position.y = floor; world.add(grid);
+
+      const nodes = {};
+      for (const [id, n] of Object.entries(def.nodes)) {
+        const ic = ICON[n.icon]();
+        const v = V(...place(n.p));
+        const holder = new THREE.Group();
+        holder.add(ic.obj); holder.scale.setScalar(scale); holder.position.copy(v);
+        world.add(holder);
+        world.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([V(v.x, v.y - 0.45 * scale, v.z), V(v.x, floor, v.z)]), M.grid));
+        nodes[id] = { ...n, v, obj: holder, icon: ic.obj, h: ic.h * scale, spin: ic.spin };
+      }
+
+      const packets = [];
+      const packetGeo = new THREE.SphereGeometry(0.075, 12, 8);
+      def.edges.forEach(([a, b, kind = 'req'], i) => {
+        const A = nodes[a].v, B = nodes[b].v;
+        const mid = A.clone().add(B).multiplyScalar(0.5); mid.y += 0.45;
+        const curve = new THREE.QuadraticBezierCurve3(A, mid, B);
+        const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(40)), kind === 'deploy' ? M.dash : M.edge);
+        if (kind === 'deploy') line.computeLineDistances();
+        world.add(line);
+        const dirs = kind === 'both' ? [1, -1] : [1];
+        dirs.forEach((dir, j) => {
+          const m = new THREE.Mesh(packetGeo, M.packet); world.add(m);
+          packets.push({ m, curve, dir, t: (i * 0.23 + j * 0.5) % 1, speed: kind === 'deploy' ? 0.13 : 0.2 + (i % 3) * 0.03 });
+        });
+      });
+
+      const labels = {};
+      for (const [id, n] of Object.entries(nodes)) {
+        const el = document.createElement('div');
+        el.className = 'topo-label' + (n.you ? ' is-you' : '');
+        el.textContent = n.label[document.documentElement.lang === 'en' ? 'en' : 'es'];
+        stage.appendChild(el);
+        labels[id] = el;
+      }
+
+      const [x0, x1, y0, y1] = view;
+      function resize() {
+        const w = stage.clientWidth, h = stage.clientHeight;
+        if (!w || !h) return;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+        const halfW = (x1 - x0) / 2 + 0.6, halfH = (y1 - y0) / 2 + 0.7;
+        const dist = Math.max(halfW / (t * camera.aspect), halfH / t) + (isHero ? 1.2 : 0.6);
+        const cy = (y0 + y1) / 2;
+        camera.position.set((x0 + x1) / 2, cy + dist * (isHero ? 0.2 : 0.14), dist);
+        camera.lookAt((x0 + x1) / 2, cy, 0);
+        camera.updateProjectionMatrix();
+      }
+
+      const state = { yaw: stage.dataset.scene === 'hero' ? -0.3 : -0.18, pitch: 0, ty: 0, tp: 0, drag: false, lx: 0, ly: 0, idle: 0, sway: 0 };
+      state.ty = state.yaw;
+      stage.addEventListener('pointerdown', (e) => { state.drag = true; state.lx = e.clientX; state.ly = e.clientY; stage.setPointerCapture(e.pointerId); });
+      stage.addEventListener('pointermove', (e) => {
+        if (!state.drag) return;
+        state.ty += (e.clientX - state.lx) * 0.008;
+        state.tp = Math.max(-0.3, Math.min(0.3, state.tp + (e.clientY - state.ly) * 0.004));
+        state.lx = e.clientX; state.ly = e.clientY; state.idle = 0;
+        if (reduce) { state.yaw = state.ty; state.pitch = state.tp; render(); }
+      });
+      const end = () => { state.drag = false; };
+      stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
+
+      const tmp = new THREE.Vector3();
+      function render() {
+        world.rotation.y = state.yaw; world.rotation.x = state.pitch;
+        renderer.render(scene, camera);
+        const w = stage.clientWidth, h = stage.clientHeight;
+        for (const [id, n] of Object.entries(nodes)) {
+          tmp.copy(n.v); tmp.y += n.h; world.localToWorld(tmp); tmp.project(camera);
+          labels[id].style.transform = `translate(${(tmp.x * 0.5 + 0.5) * w}px, ${(-tmp.y * 0.5 + 0.5) * h}px) translate(-50%, -100%)`;
+        }
+      }
+
+      // Las escenas de proyecto oscilan suavemente; la del hero gira
+      function step(dt, now) {
+        state.idle += dt;
+        if (!state.drag && state.idle > 2.5) {
+          if (stage.dataset.scene === 'hero') state.ty += dt * 0.12;
+          else { state.sway += dt * 0.35; state.ty = -0.18 + Math.sin(state.sway) * 0.32; }
+        }
+        state.yaw += (state.ty - state.yaw) * 0.08;
+        state.pitch += (state.tp - state.pitch) * 0.08;
+        for (const p of packets) {
+          p.t = (p.t + dt * p.speed) % 1;
+          p.m.position.copy(p.curve.getPoint(p.dir > 0 ? p.t : 1 - p.t));
+        }
+        for (const n of Object.values(nodes)) {
+          if (n.spin === 'z') n.icon.rotation.z += dt * 0.6;
+          else n.obj.position.y = n.v.y + Math.sin(now / 900 + n.v.x) * 0.04;
+        }
+        render();
+      }
+
+      const entry = { stage, visible: false, step, render, resize, labels, nodes };
+      const ro = new ResizeObserver(() => {
+        const nowPortrait = !isHero && stage.clientWidth / Math.max(1, stage.clientHeight) < 1.1;
+        if (nowPortrait !== portrait) { // cambió la orientación: reconstruir
+          ro.disconnect(); renderer.dispose(); canvas.remove(); Object.values(labels).forEach((l) => l.remove());
+          live.splice(live.indexOf(entry), 1);
+          const fresh = build(stage); if (fresh) fresh.visible = entry.visible; if (!reduce) loop();
+          return;
+        }
+        resize(); render();
+      });
+      ro.observe(stage);
+      resize();
+      for (const p of packets) p.m.position.copy(p.curve.getPoint(p.t));
       render();
-      requestAnimationFrame(tick);
+      live.push(entry);
+      return entry;
     }
-    function startLoop() { if (reduce || running) return; running = true; last = performance.now(); requestAnimationFrame(tick); }
 
-    new ResizeObserver(() => { resize(); render(); }).observe(stage);
-    new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) startLoop(); }).observe(stage);
+    // Construye cada escena solo cuando se acerca a la pantalla
+    const io = new IntersectionObserver((ents) => {
+      for (const en of ents) {
+        let e = live.find((x) => x.stage === en.target);
+        if (!e && en.isIntersecting) e = build(en.target);
+        if (e) e.visible = en.isIntersecting;
+      }
+      if (!reduce) loop();
+    }, { rootMargin: '200px 0px' });
+    stages.forEach((s) => io.observe(s));
 
-    resize();
-    for (const p of packets) p.m.position.copy(p.e.curve.getPoint(p.t));
-    render();
-    startLoop();
+    let running = false, last = 0;
+    function loop() {
+      if (running) return;
+      running = true; last = performance.now();
+      requestAnimationFrame(function tick(now) {
+        const dt = Math.min(0.05, (now - last) / 1000); last = now;
+        const vis = live.filter((e) => e.visible);
+        if (!vis.length) { running = false; return; }
+        vis.forEach((e) => e.step(dt, now));
+        requestAnimationFrame(tick);
+      });
+    }
+
+    document.addEventListener('themechange', () => { applyColors(); live.forEach((e) => e.render()); });
+    document.addEventListener('langchange', (ev) => {
+      live.forEach((e) => { for (const [id, n] of Object.entries(e.nodes)) e.labels[id].textContent = n.label[ev.detail]; e.render(); });
+    });
   }
 </script>
 </body>
