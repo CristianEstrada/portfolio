@@ -187,8 +187,9 @@
   }
   .topo-stage .topo-fallback { display: none; }
   .topo-stage.no-webgl .topo-fallback { display: grid; }
-  .viz { margin-top: 1.5rem; border: 1px solid var(--rule); border-radius: 10px; background: color-mix(in srgb, var(--sheet) 70%, transparent); overflow: hidden; }
-  .viz-stage { aspect-ratio: 16 / 8.5; }
+  .project > .viz { grid-column: 1 / -1; margin-top: 0; }
+  .viz { border: 1px solid var(--rule); border-radius: 10px; background: color-mix(in srgb, var(--sheet) 70%, transparent); overflow: hidden; }
+  .viz-stage { aspect-ratio: 21 / 8; min-height: 260px; }
   .viz figcaption { border-top: 1px solid var(--rule); padding: .65rem .9rem; font-size: .875rem; color: var(--graphite); }
   .viz-stage.no-webgl { display: none; }
   .topo-cap {
@@ -415,12 +416,13 @@
               <li><b>2,500+</b><span data-i18n="p.asepad.i2">certificados verificables</span></li>
               <li><b>&lt;200 ms</b><span data-i18n="p.asepad.i3">por verificación</span></li>
             </ul>
-            <figure class="viz">
+            <ul class="tags"><li>docker</li><li>nginx</li><li>postgresql</li><li>react</li><li>node.js</li><li>cloudflare</li></ul>
+          </div>
+        
+        <figure class="viz">
               <div class="topo-stage viz-stage" data-scene="asepad"></div>
               <figcaption data-i18n="viz.asepad">Empresa → Cloudflare Tunnel → Nginx → contenedores de React y Node.js → PostgreSQL</figcaption>
             </figure>
-            <ul class="tags"><li>docker</li><li>nginx</li><li>postgresql</li><li>react</li><li>node.js</li><li>cloudflare</li></ul>
-          </div>
         </article>
 
         <article class="project">
@@ -437,12 +439,13 @@
               <li><b>300–400</b><span data-i18n="p.ejv.i2">personas por asamblea</span></li>
               <li><b>&lt;200 ms</b><span data-i18n="p.ejv.i3">de sincronización</span></li>
             </ul>
-            <figure class="viz">
+            <ul class="tags"><li>react</li><li>react-native</li><li>firebase</li><li>node.js</li><li>postgresql</li><li>docker</li></ul>
+          </div>
+        
+        <figure class="viz">
               <div class="topo-stage viz-stage" data-scene="eventosjv"></div>
               <figcaption data-i18n="viz.ejv">App móvil y panel web → Nginx y Firebase en tiempo real → backend Node.js → PostgreSQL y actas en PDF</figcaption>
             </figure>
-            <ul class="tags"><li>react</li><li>react-native</li><li>firebase</li><li>node.js</li><li>postgresql</li><li>docker</li></ul>
-          </div>
         </article>
 
         <article class="project">
@@ -455,12 +458,13 @@
           </div>
           <div class="project-body">
             <p data-i18n="p.duts.desc">Tienda de cupcakes y galletas con commerce headless: Snipcart maneja carrito y checkout, y las reseñas corren en funciones serverless sin servidores que mantener.</p>
-            <figure class="viz">
+            <ul class="tags"><li>react</li><li>snipcart</li><li>aws-lambda</li><li>api-gateway</li><li>dynamodb</li></ul>
+          </div>
+        
+        <figure class="viz">
               <div class="topo-stage viz-stage" data-scene="dutsicakes"></div>
               <figcaption data-i18n="viz.duts">Cliente → Cloudflare CDN → tienda en React → Snipcart para el checkout y API Gateway → Lambda → DynamoDB para las reseñas</figcaption>
             </figure>
-            <ul class="tags"><li>react</li><li>snipcart</li><li>aws-lambda</li><li>api-gateway</li><li>dynamodb</li></ul>
-          </div>
         </article>
 
         <article class="project">
@@ -473,12 +477,13 @@
           </div>
           <div class="project-body">
             <p data-i18n="p.site.desc">HTML estático en S3 detrás de CloudFront, con DNS en Route 53 y certificado de ACM. GitHub Actions despliega con OIDC: no hay llaves de AWS guardadas en ningún lado.</p>
-            <figure class="viz">
+            <ul class="tags"><li>aws-s3</li><li>cloudfront</li><li>route-53</li><li>github-actions</li><li>oidc</li><li>three.js</li></ul>
+          </div>
+        
+        <figure class="viz">
               <div class="topo-stage viz-stage" data-scene="site"></div>
               <figcaption data-i18n="viz.site">GitHub Actions → OIDC → IAM → S3 → CloudFront; el visitante resuelve con Route 53 y recibe la página desde CloudFront</figcaption>
             </figure>
-            <ul class="tags"><li>aws-s3</li><li>cloudfront</li><li>route-53</li><li>github-actions</li><li>oidc</li><li>three.js</li></ul>
-          </div>
         </article>
       </div>
     </div>
@@ -1138,12 +1143,20 @@
       const isHero = stage.dataset.scene === 'hero';
       const portrait = !isHero && stage.clientWidth / Math.max(1, stage.clientHeight) < 1.1;
       // En pantallas angostas el flujo va de arriba hacia abajo
-      const place = (p) => portrait ? [p[1] * 1.55, -p[0] * 0.66, p[2] * 0.6] : p;
+      const raw = (p) => portrait ? [p[1] * 1.55, -p[0] * 0.66, p[2] * 0.6] : p;
+      const rp = Object.values(def.nodes).map((n) => raw(n.p));
+      const cx = (Math.min(...rp.map((p) => p[0])) + Math.max(...rp.map((p) => p[0]))) / 2;
+      const cy0 = (Math.min(...rp.map((p) => p[1])) + Math.max(...rp.map((p) => p[1]))) / 2;
+      const cz = rp.reduce((a, p) => a + p[2], 0) / rp.length;
+      // Todo queda centrado en el origen: la cámara mira ahí y el giro pivota ahí
+      const place = (p) => { const q = raw(p); return [q[0] - cx, q[1] - cy0, q[2] - cz]; };
       const pts = Object.values(def.nodes).map((n) => place(n.p));
-      const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
-      const view = isHero ? def.view : [Math.min(...xs) - 0.7, Math.max(...xs) + 0.7, Math.min(...ys) - 0.6, Math.max(...ys) + 0.9];
-      const floor = isHero ? def.floor : Math.min(...ys) - 0.9;
-      const scale = isHero ? 1.5 : portrait ? 1.1 : 1.25;
+      const radius = Math.max(...pts.map((p) => Math.hypot(p[0], p[2])));
+      const ys = pts.map((p) => p[1]);
+      const yMin = Math.min(...ys), yMax = Math.max(...ys);
+      const floor = yMin - (isHero ? 1.1 : 0.8);
+      const yawLimit = isHero ? Infinity : 0.55;
+      const scale = isHero ? 1.15 : portrait ? 0.8 : 0.85;
       let renderer;
       const canvas = document.createElement('canvas');
       canvas.setAttribute('aria-hidden', 'true');
@@ -1154,7 +1167,7 @@
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+      const camera = new THREE.PerspectiveCamera(isHero ? 34 : 24, 1, 0.1, 200);
       const world = new THREE.Group(); scene.add(world);
 
       const grid = new THREE.GridHelper(12, 12); grid.material = M.grid; grid.position.y = floor; world.add(grid);
@@ -1195,27 +1208,27 @@
         labels[id] = el;
       }
 
-      const [x0, x1, y0, y1] = view;
       function resize() {
         const w = stage.clientWidth, h = stage.clientHeight;
         if (!w || !h) return;
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-        const halfW = (x1 - x0) / 2 + 0.6, halfH = (y1 - y0) / 2 + 0.7;
-        const dist = Math.max(halfW / (t * camera.aspect), halfH / t) + (isHero ? 1.2 : 0.6);
-        const cy = (y0 + y1) / 2;
-        camera.position.set((x0 + x1) / 2, cy + dist * (isHero ? 0.2 : 0.14), dist);
-        camera.lookAt((x0 + x1) / 2, cy, 0);
+        // ancho: radio en XZ (cabe aunque gire); alto: nodos + etiquetas
+        const halfW = radius * (isHero ? 1.0 : 0.92) + 0.9;
+        const halfH = Math.max(Math.abs(yMin) + 0.7, yMax + 1.0) + 0.2;
+        const dist = Math.max(halfW / (t * camera.aspect), halfH / t) + radius * 0.35;
+        camera.position.set(0, dist * 0.16, dist);
+        camera.lookAt(0, (yMax + yMin) / 2 * 0.2 + 0.1, 0);
         camera.updateProjectionMatrix();
       }
 
-      const state = { yaw: stage.dataset.scene === 'hero' ? -0.3 : -0.18, pitch: 0, ty: 0, tp: 0, drag: false, lx: 0, ly: 0, idle: 0, sway: 0 };
+      const state = { yaw: isHero ? -0.3 : 0, pitch: 0, ty: 0, tp: 0, drag: false, lx: 0, ly: 0, idle: 0, sway: 0 };
       state.ty = state.yaw;
       stage.addEventListener('pointerdown', (e) => { state.drag = true; state.lx = e.clientX; state.ly = e.clientY; stage.setPointerCapture(e.pointerId); });
       stage.addEventListener('pointermove', (e) => {
         if (!state.drag) return;
-        state.ty += (e.clientX - state.lx) * 0.008;
+        state.ty = Math.max(-yawLimit, Math.min(yawLimit, state.ty + (e.clientX - state.lx) * 0.006));
         state.tp = Math.max(-0.3, Math.min(0.3, state.tp + (e.clientY - state.ly) * 0.004));
         state.lx = e.clientX; state.ly = e.clientY; state.idle = 0;
         if (reduce) { state.yaw = state.ty; state.pitch = state.tp; render(); }
@@ -1239,7 +1252,7 @@
         state.idle += dt;
         if (!state.drag && state.idle > 2.5) {
           if (stage.dataset.scene === 'hero') state.ty += dt * 0.12;
-          else { state.sway += dt * 0.35; state.ty = -0.18 + Math.sin(state.sway) * 0.32; }
+          else { state.sway += dt * 0.3; state.ty = Math.sin(state.sway) * 0.28; }
         }
         state.yaw += (state.ty - state.yaw) * 0.08;
         state.pitch += (state.tp - state.pitch) * 0.08;
