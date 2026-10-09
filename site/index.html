@@ -1,1422 +1,1040 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cristian Estrada - Software Engineer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f5;
-            --text-primary: #000000;
-            --text-secondary: #666666;
-            --border-color: #e0e0e0;
-            --accent: #000000;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #1a1a1a;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --border-color: #333333;
-            --accent: #ffffff;
-        }
-
-        body {
-            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 1.5rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-        }
-
-        [data-theme="dark"] nav {
-            background: rgba(10, 10, 10, 0.95);
-        }
-
-        .logo {
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: 'Monaco', monospace;
-        }
-
-        .logo::before {
-            content: '> ';
-            color: var(--text-secondary);
-        }
-
-        .nav-controls {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: opacity 0.3s;
-            font-family: 'Monaco', monospace;
-        }
-
-        .nav-links a:hover {
-            opacity: 0.6;
-        }
-
-        .controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .theme-toggle, .lang-toggle {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            padding: 0.5rem 0.75rem;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            font-family: 'Monaco', monospace;
-            transition: all 0.3s;
-        }
-
-        .theme-toggle:hover, .lang-toggle:hover {
-            background: var(--accent);
-            color: var(--bg-primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 0 5%;
-            margin-top: 80px;
-        }
-
-        .terminal {
-            width: 100%;
-            max-width: 950px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-secondary);
-        }
-
-        .terminal-header {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--text-secondary);
-        }
-
-        .terminal-title {
-            margin-left: auto;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .terminal-body {
-            padding: 2rem;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.95rem;
-        }
-
-        .terminal-line {
-            margin-bottom: 0.5rem;
-            display: flex;
-        }
-
-        .terminal-prompt {
-            color: var(--text-secondary);
-            margin-right: 0.5rem;
-        }
-
-        .terminal-input {
-            color: var(--text-primary);
-        }
-
-        .terminal-output {
-            color: var(--text-secondary);
-            margin-left: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 1.5rem 0;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            border: 1px solid var(--accent);
-            font-family: 'Monaco', monospace;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg-primary);
-        }
-
-        .btn-primary:hover {
-            background: transparent;
-            color: var(--accent);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--accent);
-        }
-
-        .btn-secondary:hover {
-            background: var(--accent);
-            color: var(--bg-primary);
-        }
-
-        /* Sections */
-        .section {
-            padding: 6rem 5%;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .section-header {
-            display: flex;
-            align-items: baseline;
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .section-number {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-family: 'Monaco', monospace;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        /* About Section */
-        .about-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 4rem;
-            max-width: 1200px;
-        }
-
-        .about-text {
-            font-size: 1.05rem;
-            line-height: 1.8;
-        }
-
-        .about-text p {
-            margin-bottom: 1.5rem;
-            color: var(--text-secondary);
-        }
-
-        .focus-areas {
-            list-style: none;
-        }
-
-        .focus-areas li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-secondary);
-        }
-
-        .focus-areas li:last-child {
-            border-bottom: none;
-        }
-
-        .focus-areas li::before {
-            content: '▸ ';
-            color: var(--accent);
-        }
-
-        /* Experience Grid */
-        .experience-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-        }
-
-        .exp-card {
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            transition: border-color 0.3s;
-            background: var(--bg-secondary);
-        }
-
-        .exp-card:hover {
-            border-color: var(--accent);
-        }
-
-        .exp-icon {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .exp-title {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .exp-description {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .tech-tag {
-            padding: 0.3rem 0.75rem;
-            border: 1px solid var(--border-color);
-            font-size: 0.8rem;
-            font-family: 'Monaco', monospace;
-            color: var(--text-secondary);
-        }
-
-        /* Stack Section */
-        .stack-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            max-width: 1200px;
-        }
-
-        .stack-category {
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            background: var(--bg-secondary);
-        }
-
-        .stack-category h3 {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .stack-list {
-            list-style: none;
-        }
-
-        .stack-list li {
-            padding: 0.5rem 0;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .stack-list li:last-child {
-            border-bottom: none;
-        }
-
-        /* Projects Section */
-        .projects-intro {
-            max-width: 800px;
-            margin-bottom: 3rem;
-            padding: 1.5rem;
-            border-left: 3px solid var(--accent);
-            background: var(--bg-secondary);
-        }
-
-        .projects-intro p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        .projects-grid {
-            display: grid;
-            gap: 3rem;
-            max-width: 1000px;
-        }
-
-        .project-card {
-            border: 1px solid var(--border-color);
-            padding: 2.5rem;
-            background: var(--bg-secondary);
-            transition: border-color 0.3s;
-        }
-
-        .project-card:hover {
-            border-color: var(--accent);
-        }
-
-        .wip-card {
-            border-style: dashed;
-            opacity: 0.8;
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .project-type {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            font-family: 'Monaco', monospace;
-        }
-
-        .wip-badge {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-secondary);
-            padding: 0.4rem 0.8rem;
-            border: 1px solid var(--border-color);
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-
-        .project-link {
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: transform 0.3s;
-        }
-
-        .project-link:hover {
-            transform: translate(3px, -3px);
-        }
-
-        .project-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .project-description {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-
-        .project-details {
-            margin: 2rem 0;
-        }
-
-        .project-section {
-            margin-bottom: 2rem;
-        }
-
-        .project-section h4 {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        .project-section p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-
-        .project-list {
-            list-style: none;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .project-list li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            line-height: 1.6;
-        }
-
-        .project-list li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-        }
-
-        .architecture-box {
-            margin: 1.5rem 0;
-            padding: 1.5rem;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            font-family: 'Monaco', monospace;
-            font-size: 0.85rem;
-        }
-
-        .architecture-box pre {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            overflow-x: auto;
-        }
-
-        .project-note {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: var(--bg-primary);
-            border-left: 2px solid var(--border-color);
-        }
-
-        .project-note small {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        .projects-footer {
-            margin-top: 3rem;
-            padding: 2rem;
-            background: var(--bg-secondary);
-            border-left: 3px solid var(--accent);
-            max-width: 1000px;
-        }
-
-        .projects-footer p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-
-        /* Contact Section */
-        .contact-content {
-            max-width: 700px;
-        }
-
-        .contact-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .contact-content p {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.8;
-        }
-
-        .contact-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .contact-link {
-            padding: 0.75rem 1.5rem;
-            border: 1px solid var(--accent);
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.3s;
-            font-family: 'Monaco', monospace;
-            font-size: 0.9rem;
-        }
-
-        .contact-link:hover {
-            background: var(--accent);
-            color: var(--bg-primary);
-        }
-
-        /* Footer */
-        footer {
-            padding: 2rem 5%;
-            border-top: 1px solid var(--border-color);
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-family: 'Monaco', monospace;
-        }
-
-        /* ===== Responsive ===== */
-        html { scroll-padding-top: 80px; -webkit-text-size-adjust: 100%; }
-        body { overflow-x: hidden; }
-        img, svg, video { max-width: 100%; height: auto; }
-        p, li, h1, h2, h3, a { overflow-wrap: break-word; }
-
-        /* Evita que el contenido ancho (diagramas <pre>) estire las tarjetas */
-        .about-grid > *, .experience-grid > *, .stack-grid > *, .projects-grid > * { min-width: 0; }
-        .projects-grid { grid-template-columns: minmax(0, 1fr); }
-        .experience-grid { grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr)); }
-        .stack-grid { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
-        .project-header { gap: 1rem; }
-
-        /* Botón de menú (solo móvil/tablet) */
-        .menu-toggle {
-            display: none;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            font-family: 'Monaco', monospace;
-            font-size: 1rem;
-            line-height: 1;
-            padding: 0.5rem 0.75rem;
-            cursor: pointer;
-        }
-
-        @media (max-width: 960px) {
-            .menu-toggle { display: inline-block; }
-            .nav-controls { gap: 0.75rem; }
-            .controls { gap: 0.5rem; }
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                flex-direction: column;
-                gap: 0;
-                background: var(--bg-primary);
-                border-bottom: 1px solid var(--border-color);
-                padding: 0.5rem 5%;
-            }
-            nav.open .nav-links { display: flex; }
-            .nav-links li { border-bottom: 1px solid var(--border-color); }
-            .nav-links li:last-child { border-bottom: none; }
-            .nav-links a { display: block; padding: 0.9rem 0; font-size: 1rem; }
-            .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-        }
-
-        @media (max-width: 768px) {
-            nav { padding: 1rem 1.25rem; }
-            .hero {
-                min-height: auto;
-                margin-top: 0;
-                padding: 6.5rem 1.25rem 3.5rem;
-            }
-            .terminal-body { padding: 1.5rem 1.25rem; font-size: 0.9rem; }
-            .terminal-output { margin-left: 0.5rem; }
-            .hero-title { font-size: 1.9rem; line-height: 1.25; }
-            .hero-subtitle { font-size: 1.05rem; }
-            .cta-buttons { flex-direction: column; }
-            .cta-buttons .btn { text-align: center; }
-
-            .section { padding: 4rem 1.25rem; }
-            .section-header { margin-bottom: 2rem; }
-            .section-title { font-size: 1.5rem; }
-            .about-text { font-size: 0.98rem; }
-
-            .exp-card, .stack-category { padding: 1.5rem; }
-            .project-card { padding: 1.5rem 1.25rem; }
-            .project-title { font-size: 1.25rem; }
-            .architecture-box { padding: 0.9rem 0.75rem; font-size: clamp(0.6rem, 2.55vw, 0.85rem); }
-            .projects-intro, .projects-footer { padding: 1.25rem; }
-
-            .contact-content h2 { font-size: 1.8rem; }
-            .contact-content p { font-size: 1rem; }
-            .contact-links { flex-direction: column; }
-            .contact-link { text-align: center; }
-            footer { padding: 2rem 1.25rem; }
-        }
-
-        @media (max-width: 380px) {
-            .logo { font-size: 0.9rem; }
-            .hero-title { font-size: 1.65rem; }
-            .terminal-title { display: none; }
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cristian Estrada — Software Engineer</title>
+<meta name="description" content="Software engineer con 6+ años construyendo aplicaciones web y móviles en producción, y la infraestructura que las sirve.">
+<meta property="og:title" content="Cristian Estrada — Software Engineer">
+<meta property="og:description" content="Frontends, arquitectura de aplicaciones e infraestructura cloud.">
+<meta property="og:url" content="https://cristianestrada.co/">
+<meta name="theme-color" content="#eef1f4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script>
+  // Tema antes de pintar para evitar parpadeo
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+  :root {
+    --paper: #eef1f4;
+    --sheet: #f7f9fb;
+    --ink: #12233b;
+    --graphite: #4a5a70;
+    --rule: #c9d2dc;
+    --rule-soft: #dde3ea;
+    --signal: #e8b500;
+    --signal-ink: #8a6a00;
+    --focus: #1f6feb;
+
+    --f-display: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif;
+    --f-text: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --f-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --gutter: clamp(1.25rem, 4vw, 3rem);
+    --maxw: 1180px;
+    --nav-h: 64px;
+  }
+  [data-theme="dark"] {
+    --paper: #0e1a2b;
+    --sheet: #13223a;
+    --ink: #e6edf5;
+    --graphite: #9fb0c6;
+    --rule: #2a3d57;
+    --rule-soft: #1e3049;
+    --signal: #f2c230;
+    --signal-ink: #f2c230;
+    --focus: #79b8ff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; padding: 0; }
+  html { scroll-padding-top: calc(var(--nav-h) + 16px); -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 1.0625rem/1.65 var(--f-text);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  /* Cuadrícula de plano muy sutil */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(var(--rule-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule-soft) 1px, transparent 1px);
+    background-size: 32px 32px;
+    opacity: .55;
+    mask-image: linear-gradient(to bottom, #000 0, #000 70vh, transparent 110vh);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 70vh, transparent 110vh);
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+  ::selection { background: var(--signal); color: #12233b; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    height: var(--nav-h);
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav .wrap { height: 100%; display: flex; align-items: center; gap: 1.5rem; }
+  .brand {
+    font: 600 1.125rem/1 var(--f-display);
+    letter-spacing: .01em; text-decoration: none; white-space: nowrap;
+  }
+  .brand b { color: var(--signal-ink); font-weight: 700; }
+  .nav-links { display: flex; gap: 1.75rem; list-style: none; margin-left: auto; }
+  .nav-links a {
+    text-decoration: none; font-size: .9375rem; color: var(--graphite);
+    padding: .25rem 0; border-bottom: 1px solid transparent;
+  }
+  .nav-links a:hover, .nav-links a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+  .nav-tools { display: flex; align-items: center; gap: .5rem; }
+  .icon-btn {
+    height: 36px; min-width: 36px; padding: 0 .6rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--rule); border-radius: 6px;
+    font: 500 .8125rem/1 var(--f-mono); cursor: pointer;
+  }
+  .icon-btn:hover { border-color: var(--ink); }
+  .icon-btn svg { width: 16px; height: 16px; }
+  .btn-cv {
+    height: 36px; display: inline-flex; align-items: center; gap: .45rem;
+    padding: 0 .9rem; border-radius: 6px; text-decoration: none;
+    background: var(--ink); color: var(--paper);
+    font: 500 .875rem/1 var(--f-text);
+  }
+  .btn-cv:hover { background: color-mix(in srgb, var(--ink) 85%, var(--signal)); }
+  .menu-btn { display: none; }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: calc(var(--nav-h) + clamp(2.5rem, 7vw, 5.5rem)) 0 clamp(3rem, 6vw, 5rem); }
+  .hero .wrap {
+    display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem); align-items: center;
+  }
+  .status {
+    display: inline-flex; align-items: center; gap: .55rem;
+    font-size: .9375rem; color: var(--graphite); margin-bottom: 1.5rem;
+  }
+  .status::before {
+    content: ''; flex: none; width: 8px; height: 8px; border-radius: 50%;
+    background: #2fa84f; box-shadow: 0 0 0 4px color-mix(in srgb, #2fa84f 22%, transparent);
+  }
+  .hero h1 {
+    font: 700 clamp(3.25rem, 9.5vw, 7.25rem)/.9 var(--f-display);
+    letter-spacing: -.025em;
+  }
+  .hero h1 span { display: block; }
+  .hero h1 span:last-child {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
+  .lede {
+    margin-top: 1.75rem; max-width: 34ch;
+    font-size: clamp(1.125rem, 1.6vw, 1.3125rem); line-height: 1.5; color: var(--graphite);
+  }
+  .lede strong { color: var(--ink); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    height: 46px; padding: 0 1.25rem; border-radius: 8px;
+    font: 500 1rem/1 var(--f-text); text-decoration: none;
+    border: 1px solid var(--ink);
+  }
+  .btn-solid { background: var(--ink); color: var(--paper); }
+  .btn-solid:hover { background: color-mix(in srgb, var(--ink) 85%, var(--signal)); }
+  .btn-line { color: var(--ink); background: transparent; }
+  .btn-line:hover { background: var(--sheet); }
+  .socials { display: flex; gap: 1.25rem; margin-top: 1.75rem; font-size: .9375rem; }
+  .socials a { color: var(--graphite); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .socials a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+  /* Topología */
+  .topo {
+    position: relative; border: 1px solid var(--rule); border-radius: 12px;
+    background: color-mix(in srgb, var(--sheet) 70%, transparent);
+    overflow: hidden;
+  }
+  .topo-stage { position: relative; aspect-ratio: 4 / 3.2; touch-action: pan-y; cursor: grab; overflow: hidden; }
+  .topo-stage:active { cursor: grabbing; }
+  .topo canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .topo-label {
+    position: absolute; left: 0; top: 0;
+    font: 500 .75rem/1.2 var(--f-mono); white-space: nowrap; pointer-events: none;
+    padding: .2rem .45rem; border-radius: 4px;
+    background: var(--paper); border: 1px solid var(--rule); color: var(--ink);
+  }
+  .topo-label.is-you { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .topo-fallback {
+    position: absolute; inset: 0; display: grid; place-items: center; padding: 1.5rem;
+    font: 400 .875rem/1.9 var(--f-mono); color: var(--graphite); text-align: center;
+  }
+  .topo-fallback[hidden] { display: none; }
+  .topo-cap {
+    border-top: 1px solid var(--rule); padding: .9rem 1.1rem 1rem;
+    display: grid; gap: .75rem;
+  }
+  .topo-cap p { font-size: .9375rem; color: var(--graphite); }
+  .topo-cap p strong { color: var(--ink); font-weight: 500; }
+  .timings { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; }
+  .timings div { display: grid; gap: .1rem; }
+  .timings dt { font-size: .8125rem; color: var(--graphite); }
+  .timings dd { font: 500 1rem/1.3 var(--f-mono); color: var(--ink); font-variant-numeric: tabular-nums; }
+  .timings dd.na { color: var(--graphite); font: 400 .875rem/1.45 var(--f-text); }
+
+  /* ---------- Secciones ---------- */
+  section.block { padding: clamp(4rem, 9vw, 7rem) 0; border-top: 1px solid var(--rule); }
+  .block-head { display: grid; gap: .75rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); max-width: 62ch; }
+  .block-head h2 {
+    font: 600 clamp(2.25rem, 5vw, 3.5rem)/1 var(--f-display); letter-spacing: -.015em;
+  }
+  .block-head p { color: var(--graphite); font-size: 1.0625rem; }
+
+  /* Proyectos: filas, no tarjetas idénticas */
+  .project {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    padding: clamp(2rem, 4vw, 2.75rem) 0;
+    border-top: 1px solid var(--rule);
+  }
+  .project:first-child { border-top: 0; padding-top: 0; }
+  .project h3 { font: 600 clamp(1.625rem, 3vw, 2.125rem)/1.1 var(--f-display); letter-spacing: -.01em; }
+  .project-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .9rem; margin-top: .75rem; font-size: .9375rem; color: var(--graphite); }
+  .badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .8125rem; padding: .15rem .55rem; border-radius: 999px; border: 1px solid var(--rule);
+  }
+  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--graphite); }
+  .badge.live::before { background: #2fa84f; }
+  .project-link { color: var(--ink); font-weight: 500; text-decoration: none; border-bottom: 1px solid var(--ink); overflow-wrap: anywhere; }
+  .project-link:hover { color: var(--signal-ink); border-bottom-color: var(--signal-ink); }
+  .project-body p { color: var(--graphite); max-width: 62ch; }
+  .impact { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0 0; }
+  .impact li { border-left: 2px solid var(--signal); padding-left: .85rem; }
+  .impact b { display: block; font: 600 1.375rem/1.2 var(--f-display); color: var(--ink); }
+  .impact span { font-size: .875rem; color: var(--graphite); }
+  .tags { display: flex; flex-wrap: wrap; gap: .4rem .9rem; margin-top: 1.25rem; font: 400 .8125rem/1.5 var(--f-mono); color: var(--graphite); list-style: none; }
+  details.arch { margin-top: 1.5rem; border: 1px solid var(--rule); border-radius: 8px; background: var(--sheet); }
+  details.arch summary {
+    cursor: pointer; list-style: none; padding: .7rem 1rem;
+    display: flex; align-items: center; gap: .65rem; font-size: .9375rem; font-weight: 500;
+  }
+  details.arch summary::-webkit-details-marker { display: none; }
+  details.arch summary::before {
+    content: ''; width: 7px; height: 7px; border-right: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink);
+    transform: rotate(-45deg); transition: transform .2s;
+  }
+  details.arch[open] summary::before { transform: rotate(45deg); }
+  details.arch pre {
+    margin: 0; padding: 1rem 1.1rem 1.2rem; border-top: 1px solid var(--rule);
+    font: 400 clamp(.6875rem, 1.6vw, .8125rem)/1.65 var(--f-mono); color: var(--graphite);
+    overflow-x: auto;
+  }
+
+  /* Experiencia: línea de tiempo */
+  .timeline { list-style: none; }
+  .job {
+    display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 2rem;
+    padding: 1.75rem 0; border-top: 1px solid var(--rule);
+  }
+  .timeline > .job:first-child { border-top: 0; padding-top: 0; }
+  .job time { font: 400 .875rem/1.5 var(--f-mono); color: var(--graphite); padding-top: .35rem; }
+  .job h3 { font: 600 1.375rem/1.25 var(--f-display); }
+  .job h3 .org { color: var(--graphite); font-weight: 500; }
+  .job ul { margin-top: .6rem; padding-left: 1.1rem; color: var(--graphite); display: grid; gap: .35rem; max-width: 68ch; }
+  .job ul li::marker { color: var(--signal-ink); }
+  .job.current time { color: var(--ink); }
+  .earlier { margin-top: 1.75rem; border-top: 1px solid var(--rule); padding-top: 1.25rem; }
+  .earlier summary { cursor: pointer; font-weight: 500; color: var(--ink); width: fit-content; }
+  .earlier .timeline { margin-top: 1.5rem; }
+
+  /* Stack */
+  .stack { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem; }
+  .stack h3 { font: 600 1.25rem/1.2 var(--f-display); padding-bottom: .75rem; border-bottom: 1px solid var(--ink); margin-bottom: .9rem; }
+  .stack ul { list-style: none; display: grid; gap: .45rem; color: var(--graphite); font-size: 1rem; }
+
+  /* Sobre mí */
+  .about { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: clamp(2rem, 5vw, 4rem); }
+  .about-text p { font-size: 1.1875rem; line-height: 1.6; max-width: 58ch; }
+  .about-text p + p { margin-top: 1.1rem; color: var(--graphite); font-size: 1.0625rem; }
+  .facts { display: grid; gap: 1.1rem; align-content: start; }
+  .facts div { border-top: 1px solid var(--rule); padding-top: .8rem; }
+  .facts dt { font-size: .875rem; color: var(--graphite); }
+  .facts dd { font-weight: 500; }
+
+  /* Contacto */
+  .contact { padding: clamp(4.5rem, 10vw, 8rem) 0; border-top: 1px solid var(--rule); }
+  .contact h2 { font: 700 clamp(2.5rem, 7vw, 5.25rem)/.95 var(--f-display); letter-spacing: -.02em; max-width: 14ch; }
+  .contact p { margin-top: 1.25rem; max-width: 52ch; color: var(--graphite); font-size: 1.125rem; }
+  .contact .actions { margin-top: 2.25rem; }
+  .cmd {
+    margin-top: 2.5rem; display: inline-flex; align-items: center; gap: .75rem; max-width: 100%;
+    font: 400 .9375rem/1.4 var(--f-mono); color: var(--graphite);
+    border: 1px dashed var(--rule); border-radius: 8px; padding: .6rem .6rem .6rem .9rem;
+  }
+  .cmd code { color: var(--ink); font-family: inherit; white-space: nowrap; overflow-x: auto; min-width: 0; scrollbar-width: none; }
+  .cmd button { flex: none; }
+
+  footer { border-top: 1px solid var(--rule); padding: 1.75rem 0 2.25rem; font-size: .875rem; color: var(--graphite); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1024px) {
+    .stack { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2.5rem; }
+  }
+  @media (max-width: 900px) {
+    .menu-btn { display: inline-flex; }
+    .nav-links {
+      display: none; position: absolute; top: var(--nav-h); left: 0; right: 0;
+      flex-direction: column; gap: 0; padding: .5rem var(--gutter) 1rem;
+      background: var(--paper); border-bottom: 1px solid var(--rule);
+    }
+    .nav.open .nav-links { display: flex; }
+    .nav-links a { display: block; padding: .85rem 0; font-size: 1.0625rem; border-bottom: 1px solid var(--rule-soft); }
+    .nav-links li:last-child a { border-bottom: 0; }
+    .nav-tools { margin-left: auto; }
+    .hero .wrap { grid-template-columns: minmax(0, 1fr); }
+    .project { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+    .about { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    body { font-size: 1rem; }
+    .btn-cv span { display: none; }
+    .btn-cv { padding: 0 .7rem; }
+    .job { grid-template-columns: minmax(0, 1fr); gap: .35rem; }
+    .job time { padding-top: 0; }
+    .stack { grid-template-columns: minmax(0, 1fr); }
+    .timings { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: .75rem; }
+    .topo-stage { aspect-ratio: 1 / 1; }
+    .actions .btn { flex: 1 1 auto; justify-content: center; }
+    .about-text p { font-size: 1.0625rem; }
+    .hero h1 { font-size: clamp(3.25rem, 19vw, 5rem); }
+    .cmd { display: flex; font-size: .8125rem; }
+  }
+  @media (max-width: 380px) {
+    .nav .wrap { gap: .75rem; }
+    .brand { font-size: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
 </head>
-<body data-theme="light">
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">cristian.estrada</div>
-        <div class="nav-controls">
-            <ul class="nav-links" id="nav-links">
-                <li><a href="#about" data-lang-key="nav-about">about</a></li>
-                <li><a href="#experience" data-lang-key="nav-experience">experience</a></li>
-                <li><a href="#stack" data-lang-key="nav-stack">stack</a></li>
-                <li><a href="#projects" data-lang-key="nav-projects">projects</a></li>
-                <li><a href="#contact" data-lang-key="nav-contact">contact</a></li>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Inicio">cristian<b>.</b>estrada</a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#proyectos" data-i18n="nav.projects">Proyectos</a></li>
+      <li><a href="#experiencia" data-i18n="nav.experience">Experiencia</a></li>
+      <li><a href="#stack" data-i18n="nav.stack">Stack</a></li>
+      <li><a href="#sobre-mi" data-i18n="nav.about">Sobre mí</a></li>
+      <li><a href="#contacto" data-i18n="nav.contact">Contacto</a></li>
+    </ul>
+    <div class="nav-tools">
+      <button class="icon-btn" id="lang-btn" type="button" aria-label="Switch to English">EN</button>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Cambiar tema">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg>
+      </button>
+      <a class="btn-cv" href="/cv.pdf" target="_blank" rel="noopener" aria-label="CV (PDF)">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 2v8m0 0L4.75 6.75M8 10l3.25-3.25M2.75 13.25h10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>CV</span>
+      </a>
+      <button class="icon-btn menu-btn" id="menu-btn" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="status" data-i18n="hero.status">Disponible para nuevos roles en Bay Area, California</p>
+        <h1><span>Cristian</span><span>Estrada</span></h1>
+        <p class="lede" data-i18n="hero.lede">Software engineer con 6+ años en producción. <strong>Construyo frontends y la infraestructura que los sirve</strong> con React, TypeScript, Vue y AWS.</p>
+        <div class="actions">
+          <a class="btn btn-solid" href="#proyectos" data-i18n="hero.cta1">Ver proyectos</a>
+          <a class="btn btn-line" href="/CV" data-i18n="hero.cta2">Descargar CV</a>
+        </div>
+        <div class="socials">
+          <a href="https://github.com/CristianEstrada" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.linkedin.com/in/cristian-estrada-romero" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://dev.to/cristianestrada" target="_blank" rel="noopener">dev.to</a>
+        </div>
+      </div>
+
+      <figure class="topo" aria-labelledby="topo-cap">
+        <div class="topo-stage" id="topo-stage">
+          <canvas id="topo-canvas" aria-hidden="true"></canvas>
+          <div class="topo-fallback" id="topo-fallback" hidden>Tú → Route 53 → CloudFront → S3<br>GitHub Actions → S3</div>
+        </div>
+        <figcaption class="topo-cap" id="topo-cap">
+          <p data-i18n="topo.cap"><strong>Así te llegó esta página.</strong> Tu navegador resolvió el dominio en Route 53 y CloudFront te la entregó desde el edge más cercano. Cada push a GitHub la vuelve a desplegar en S3.</p>
+          <dl class="timings">
+            <div><dt>DNS</dt><dd id="t-dns" class="na">—</dd></div>
+            <div><dt>TLS</dt><dd id="t-tls" class="na">—</dd></div>
+            <div><dt data-i18n="topo.ttfb">Primera respuesta</dt><dd id="t-ttfb" class="na">—</dd></div>
+            <div><dt>Edge</dt><dd id="t-pop" class="na">—</dd></div>
+          </dl>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Proyectos -->
+  <section class="block" id="proyectos">
+    <div class="wrap">
+      <div class="block-head">
+        <h2 data-i18n="projects.title">Proyectos</h2>
+        <p data-i18n="projects.intro">Sistemas en producción donde puedo mostrar la arquitectura. La mayor parte de mi trabajo profesional vive en repositorios privados.</p>
+      </div>
+
+      <div class="projects">
+        <article class="project">
+          <div>
+            <h3>ASEPAD</h3>
+            <div class="project-meta">
+              <span class="badge live" data-i18n="badge.live">En producción</span>
+              <a class="project-link" href="https://www.asepad.com.co/certificados/" target="_blank" rel="noopener">asepad.com.co</a>
+            </div>
+          </div>
+          <div class="project-body">
+            <p data-i18n="p.asepad.desc">Emisión y verificación de certificados de seguridad laboral. Cualquier empresa puede comprobar en segundos si un certificado es auténtico.</p>
+            <ul class="impact">
+              <li><b data-i18n="p.asepad.i1b">1 semana → minutos</b><span data-i18n="p.asepad.i1">para emitir un certificado</span></li>
+              <li><b>2,500+</b><span data-i18n="p.asepad.i2">certificados verificables</span></li>
+              <li><b>&lt;200 ms</b><span data-i18n="p.asepad.i3">por verificación</span></li>
             </ul>
-            <div class="controls">
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">◐</button>
-                <button class="lang-toggle" onclick="toggleLanguage()" aria-label="Cambiar idioma">EN</button>
-                <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menú" aria-expanded="false" aria-controls="nav-links">☰</button>
+            <details class="arch">
+              <summary data-i18n="arch.toggle">Ver arquitectura</summary>
+<pre>Cloudflare Tunnel  (sin puertos expuestos)
+        │
+   Nginx  (reverse proxy)
+        ├── Frontend   · React
+        ├── Backend    · Node.js
+        └── PostgreSQL · contenedor con backups</pre>
+            </details>
+            <ul class="tags"><li>docker</li><li>nginx</li><li>postgresql</li><li>react</li><li>node.js</li><li>cloudflare</li></ul>
+          </div>
+        </article>
+
+        <article class="project">
+          <div>
+            <h3>EventosJV</h3>
+            <div class="project-meta">
+              <span class="badge" data-i18n="badge.private">App privada para clientes</span>
             </div>
-        </div>
-    </nav>
+          </div>
+          <div class="project-body">
+            <p data-i18n="p.ejv.desc">Gestión de asambleas en propiedad horizontal: asistencia, votaciones y estadísticas en vivo, con app móvil y panel web sincronizados en tiempo real y actas en PDF.</p>
+            <ul class="impact">
+              <li><b>20–30</b><span data-i18n="p.ejv.i1">asambleas al mes en temporada alta</span></li>
+              <li><b>300–400</b><span data-i18n="p.ejv.i2">personas por asamblea</span></li>
+              <li><b>&lt;200 ms</b><span data-i18n="p.ejv.i3">de sincronización</span></li>
+            </ul>
+            <details class="arch">
+              <summary data-i18n="arch.toggle">Ver arquitectura</summary>
+<pre>App móvil  ⇄  Firebase (Auth + Realtime DB)
+                   │
+Panel web  ⇄  Backend Node.js (Docker)
+                   │
+             Nginx (reverse proxy)
+                   │
+             PostgreSQL (Docker)</pre>
+            </details>
+            <ul class="tags"><li>react</li><li>react-native</li><li>firebase</li><li>node.js</li><li>postgresql</li><li>docker</li></ul>
+          </div>
+        </article>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="terminal">
-            <div class="terminal-header">
-                <div class="terminal-dot"></div>
-                <div class="terminal-dot"></div>
-                <div class="terminal-dot"></div>
-                <div class="terminal-title">cristian@estrada:~</div>
+        <article class="project">
+          <div>
+            <h3>Dutsicakes</h3>
+            <div class="project-meta">
+              <span class="badge live" data-i18n="badge.live">En producción</span>
+              <a class="project-link" href="https://dutsicakes.com" target="_blank" rel="noopener">dutsicakes.com</a>
             </div>
-            <div class="terminal-body">
-                <div class="terminal-line">
-                    <span class="terminal-prompt">$</span>
-                    <span class="terminal-input">whoami</span>
-                </div>
-                <div class="terminal-output" data-lang-key="hero-whoami">
-                    Software Full-Stack Engineer | Cloud | DevOps
-                </div>
+          </div>
+          <div class="project-body">
+            <p data-i18n="p.duts.desc">Tienda de cupcakes y galletas con commerce headless: Snipcart maneja carrito y checkout, y las reseñas corren en funciones serverless sin servidores que mantener.</p>
+            <details class="arch">
+              <summary data-i18n="arch.toggle">Ver arquitectura</summary>
+<pre>Frontend (React) ── Snipcart (carrito + checkout)
+        │
+   Cloudflare (CDN + seguridad)
+        │
+   API Gateway ── Lambda
+        │
+   DynamoDB (reseñas)</pre>
+            </details>
+            <ul class="tags"><li>react</li><li>snipcart</li><li>aws-lambda</li><li>api-gateway</li><li>dynamodb</li></ul>
+          </div>
+        </article>
 
-                <h1 class="hero-title">Cristian Estrada</h1>
-                <p class="hero-subtitle" data-lang-key="hero-subtitle">
-                    Arquitectura, desarrollo y deployment de sistemas escalables.
-                </p>
-
-                <div class="terminal-line">
-                    <span class="terminal-prompt">$</span>
-                    <span class="terminal-input">ls skills/</span>
-                </div>
-                <div class="terminal-output" data-lang-key="hero-expertise">
-                    cloud/  databases/  devops/  frontend/  backend/
-                </div>
-
-                <div class="cta-buttons">
-                    <a href="#projects" class="btn btn-primary" data-lang-key="cta-view">View Projects</a>
-                    <a href="#contact" class="btn btn-secondary" data-lang-key="cta-contact">Get in Touch</a>
-                </div>
+        <article class="project">
+          <div>
+            <h3 data-i18n="p.site.title">Este sitio</h3>
+            <div class="project-meta">
+              <span class="badge live" data-i18n="badge.open">Código abierto</span>
+              <a class="project-link" href="https://github.com/CristianEstrada/portfolio" target="_blank" rel="noopener">CristianEstrada/portfolio</a>
             </div>
-        </div>
-    </section>
+          </div>
+          <div class="project-body">
+            <p data-i18n="p.site.desc">HTML estático en S3 detrás de CloudFront, con DNS en Route 53 y certificado de ACM. GitHub Actions despliega con OIDC: no hay llaves de AWS guardadas en ningún lado.</p>
+            <details class="arch">
+              <summary data-i18n="arch.toggle">Ver arquitectura</summary>
+<pre>git push main
+   │
+GitHub Actions ── OIDC ──▶ IAM role (solo este repo y rama)
+   │
+aws s3 sync ──▶ S3 ──▶ CloudFront (invalidación)
+                         ▲
+Visitante ── Route 53 ───┘   TLS: ACM</pre>
+            </details>
+            <ul class="tags"><li>aws-s3</li><li>cloudfront</li><li>route-53</li><li>github-actions</li><li>oidc</li><li>three.js</li></ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-    <!-- About Section -->
-    <section id="about" class="section">
-        <div class="section-header">
-            <span class="section-number">01.</span>
-            <h2 class="section-title" data-lang-key="about-title">About</h2>
-        </div>
-        <div class="about-grid">
-            <div class="about-text">
-                <p data-lang-key="about-p1">
-                    Ingeniero de sistemas con 3.5 años de experiencia en desarrollo full-stack, 
-                    administración de bases de datos y gestión de infraestructura. Mi enfoque abarca desde 
-                    el desarrollo de aplicaciones hasta el deployment en producción.
-                </p>
-                <p data-lang-key="about-p2">
-                    He trabajado en entornos corporativos y casas de software, implementando sistemas críticos, 
-                    optimizando bases de datos empresariales (Oracle, PostgreSQL, MySQL), y desarrollando 
-                    aplicaciones web y móviles. Manejo infraestructura dockerizada con Nginx como reverse proxy, 
-                    y he implementado soluciones serverless con AWS Lambda y DynamoDB.
-                </p>
-                <p data-lang-key="about-p3">
-                    Actualmente administro múltiples aplicaciones en producción con Docker multi-container, 
-                    utilizando Cloudflare Tunnels para seguridad y bases de datos containerizadas. Busco 
-                    oportunidades para seguir creciendo en desarrollo full-stack y arquitectura de sistemas.
-                </p>
-            </div>
+  <!-- Experiencia -->
+  <section class="block" id="experiencia">
+    <div class="wrap">
+      <div class="block-head">
+        <h2 data-i18n="exp.title">Experiencia</h2>
+      </div>
+      <ol class="timeline">
+        <li class="job current">
+          <time data-i18n="exp.hyve.d">mar 2026 – jul 2026</time>
+          <div>
+            <h3><span data-i18n="exp.hyve.role">Testing Engineer</span> <span class="org">· Hyve Solutions</span></h3>
+            <ul>
+              <li data-i18n="exp.hyve.1">Desarrollé una aplicación en React y Python que reúne las pruebas de servidores y el flujo de los operadores en una sola interfaz.</li>
+              <li data-i18n="exp.hyve.2">Automaticé utilidades de prueba con descubrimiento de scripts: más operaciones en paralelo y cerca de 80% menos recursos en las estaciones de trabajo.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="job">
+          <time data-i18n="exp.cortex.d">oct 2025 – ene 2026</time>
+          <div>
+            <h3><span data-i18n="exp.cortex.role">Full-Stack Engineer</span> <span class="org">· withcortex.ai</span></h3>
+            <ul>
+              <li data-i18n="exp.cortex.1">Construí funcionalidades en React y TypeScript para un producto de análisis de documentos con IA: arquitectura del cliente, navegación, editor e integración con LLMs.</li>
+              <li data-i18n="exp.cortex.2">Bajé el render del visor de PDF de 0.5–1 s a 0.01–0.1 s por página.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="job">
+          <time data-i18n="exp.ul.d">mar 2024 – abr 2025</time>
+          <div>
+            <h3><span data-i18n="exp.ul.role">Arquitecto de software e infraestructura</span> <span class="org">· Universidad Libre</span></h3>
+            <ul>
+              <li data-i18n="exp.ul.1">Lideré la arquitectura y operación de infraestructura para más de 35,000 estudiantes y empleados en varias sedes, con Oracle 19c y Linux críticos.</li>
+              <li data-i18n="exp.ul.2">Reduje una exportación de datos crítica de 4 horas a 30 minutos optimizando consultas y automatizando el proceso.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="job">
+          <time data-i18n="exp.ss.d">ene 2024 – jul 2025</time>
+          <div>
+            <h3><span data-i18n="exp.ss.role">Fundador y líder técnico</span> <span class="org">· Sharkstart</span></h3>
+            <ul>
+              <li data-i18n="exp.ss.1">Fundé y dirigí un equipo pequeño que entregó aplicaciones web y móviles para clientes: arquitectura, implementación, despliegue y planeación ágil.</li>
+              <li data-i18n="exp.ss.2">Entregamos EventosJV, ASEPAD y Dutsicakes.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="job">
+          <time data-i18n="exp.sbs.d">jul 2023 – ene 2024</time>
+          <div>
+            <h3><span data-i18n="exp.sbs.role">Frontend Developer</span> <span class="org">· SBS Colombia</span></h3>
+            <ul>
+              <li data-i18n="exp.sbs.1">Cotizadores de seguros para corredores con Vue.js sobre una arquitectura de microfrontends Single-SPA.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+
+      <details class="earlier">
+        <summary data-i18n="exp.earlier">Experiencia anterior (2018 – 2023)</summary>
+        <ol class="timeline">
+          <li class="job">
+            <time data-i18n="exp.mq.d">mar 2023 – jul 2023</time>
             <div>
-                <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem;" data-lang-key="focus-title">Expertise</h3>
-                <ul class="focus-areas">
-                    <li data-lang-key="focus-1">Full-Stack Development</li>
-                    <li data-lang-key="focus-2">Database Engineering</li>
-                    <li data-lang-key="focus-3">Infrastructure & DevOps</li>
-                    <li data-lang-key="focus-4">Docker & Containerization</li>
-                    <li data-lang-key="focus-5">AWS Serverless (Lambda)</li>
-                    <li data-lang-key="focus-6">System Administration</li>
-                </ul>
+              <h3><span data-i18n="exp.mq.role">Consultor técnico</span> <span class="org">· Matrica / Q-Vision</span></h3>
+              <ul><li data-i18n="exp.mq.1">Corregí fallas recurrentes en producción de una app React Native con servicios en PostgreSQL y apoyé su migración a TypeScript.</li></ul>
             </div>
+          </li>
+          <li class="job">
+            <time data-i18n="exp.pv.d">sep 2022 – feb 2023</time>
+            <div>
+              <h3><span data-i18n="exp.pv.role">Frontend Developer</span> <span class="org">· Puvodessentials</span></h3>
+              <ul><li data-i18n="exp.pv.1">Modernización de un e-commerce: migración de frontend legado, integraciones y mejoras de rendimiento.</li></ul>
+            </div>
+          </li>
+          <li class="job">
+            <time data-i18n="exp.cn.d">jun 2021 – jul 2022</time>
+            <div>
+              <h3><span data-i18n="exp.cn.role">Líder de desarrollo</span> <span class="org">· Conectados</span></h3>
+              <ul><li data-i18n="exp.cn.1">App móvil accesible en Flutter para adultos mayores (proyecto académico).</li></ul>
+            </div>
+          </li>
+          <li class="job">
+            <time>2018 – 2020</time>
+            <div>
+              <h3><span data-i18n="exp.fl.role">Freelance y Parquesoft Meta</span></h3>
+              <ul><li data-i18n="exp.fl.1">Aplicaciones web y de escritorio para negocios; bases de datos y procedimientos almacenados con SQL, C# y .NET.</li></ul>
+            </div>
+          </li>
+        </ol>
+      </details>
+    </div>
+  </section>
+
+  <!-- Stack -->
+  <section class="block" id="stack">
+    <div class="wrap">
+      <div class="block-head">
+        <h2>Stack</h2>
+      </div>
+      <div class="stack">
+        <div>
+          <h3>Frontend</h3>
+          <ul><li>TypeScript</li><li>React</li><li>Vue.js</li><li data-i18n="stack.spa">Microfrontends (Single-SPA)</li><li>React Native</li><li>Flutter</li></ul>
         </div>
-    </section>
-
-    <!-- Experience Section -->
-    <section id="experience" class="section">
-        <div class="section-header">
-            <span class="section-number">02.</span>
-            <h2 class="section-title" data-lang-key="exp-title">Experience</h2>
+        <div>
+          <h3 data-i18n="stack.back">Backend y datos</h3>
+          <ul><li>Node.js, Express</li><li>Python, Django</li><li>PostgreSQL</li><li>Oracle 19c</li><li>MySQL, MongoDB</li><li>DynamoDB, Firebase</li></ul>
         </div>
-        <div class="experience-grid">
-            <div class="exp-card">
-                <h3 class="exp-title" data-lang-key="exp1-title">Infrastructure & Deployment</h3>
-                <p class="exp-description" data-lang-key="exp1-desc">
-                    Implementación y administración de infraestructura con Docker multi-container, orquestación 
-                    en VPS, Nginx reverse proxy, y Cloudflare Tunnels para seguridad. Experiencia con AWS Lambda, 
-                    DynamoDB y API Gateway para funciones serverless. Gestión de bases de datos dockerizadas para 
-                    portabilidad y migración.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">Docker</span>
-                    <span class="tech-tag">Nginx</span>
-                    <span class="tech-tag">AWS Lambda</span>
-                    <span class="tech-tag">Cloudflare</span>
-                    <span class="tech-tag">VPS</span>
-                </div>
-            </div>
-
-            <div class="exp-card">
-                <h3 class="exp-title" data-lang-key="exp2-title">Database Engineering & Architecture</h3>
-                <p class="exp-description" data-lang-key="exp2-desc">
-                    Administración de Oracle Database en institución universitaria, diseño de arquitecturas de datos 
-                    escalables y optimización de queries críticos. Implementación de índices optimizados reduciendo 
-                    exports diarios de <strong>4 horas a 30 minutos</strong> (87.5% mejora). Reducción de downtime en 
-                    mantenimientos de <strong>8 horas a 2 horas</strong> (75% reducción). Laboratorios con sharding 
-                    por campus para ambientes de prueba.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">Oracle DB</span>
-                    <span class="tech-tag">PostgreSQL</span>
-                    <span class="tech-tag">Performance Tuning</span>
-                    <span class="tech-tag">Sharding</span>
-                    <span class="tech-tag">Indexes</span>
-                </div>
-            </div>
-
-            <div class="exp-card">
-                <h3 class="exp-title" data-lang-key="exp3-title">Full-Stack Development</h3>
-                <p class="exp-description" data-lang-key="exp3-desc">
-                    Desarrollo de aplicaciones web y móviles completas: e-commerce, sistemas de gestión empresarial, 
-                    aplicaciones mobile React Native. Arquitectura frontend y backend, implementación de APIs REST, 
-                    integración con servicios cloud, y deployment en producción. Experiencia con headless commerce 
-                    y CMS modernos.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">React</span>
-                    <span class="tech-tag">Node.js</span>
-                    <span class="tech-tag">Python</span>
-                    <span class="tech-tag">React Native</span>
-                    <span class="tech-tag">REST APIs</span>
-                </div>
-            </div>
-
-            <div class="exp-card">
-                <h3 class="exp-title" data-lang-key="exp4-title">System Debugging & Refactoring</h3>
-                <p class="exp-description" data-lang-key="exp4-desc">
-                    Resolución de problemas críticos en sistemas legacy por contrato, reduciendo deuda técnica en 
-                    <strong>40-45%</strong> mediante análisis de arquitectura, identificación de cuellos de botella, y 
-                    refactorización estratégica. Trabajo con múltiples stacks (Java, Python, JavaScript) aplicando 
-                    principios de ingeniería de software para mejorar mantenibilidad, escalabilidad y rendimiento.
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">Java</span>
-                    <span class="tech-tag">Python</span>
-                    <span class="tech-tag">JavaScript</span>
-                    <span class="tech-tag">Refactoring</span>
-                    <span class="tech-tag">Architecture</span>
-                </div>
-            </div>
+        <div>
+          <h3 data-i18n="stack.cloud">Cloud e infraestructura</h3>
+          <ul><li>AWS: S3, CloudFront, Lambda, EC2</li><li>Docker</li><li>Nginx</li><li>Linux</li><li>GitHub Actions</li><li>Cloudflare</li></ul>
         </div>
-    </section>
-
-    <!-- Stack Section -->
-    <section id="stack" class="section">
-        <div class="section-header">
-            <span class="section-number">03.</span>
-            <h2 class="section-title" data-lang-key="stack-title">Technical Stack</h2>
+        <div>
+          <h3 data-i18n="stack.practice">Práctica</h3>
+          <ul>
+            <li data-i18n="stack.p1">Arquitectura de aplicaciones</li>
+            <li data-i18n="stack.p2">Optimización de rendimiento</li>
+            <li data-i18n="stack.p3">Respuesta a incidentes</li>
+            <li data-i18n="stack.p4">Automatización de pruebas</li>
+            <li data-i18n="stack.p5">Integración con LLMs</li>
+            <li data-i18n="stack.p6">Documentación técnica</li>
+          </ul>
         </div>
-        <div class="stack-grid">
-            <div class="stack-category">
-                <h3 data-lang-key="stack-cloud-title">Cloud & Serverless</h3>
-                <ul class="stack-list">
-                    <li>AWS Lambda</li>
-                    <li>API Gateway</li>
-                    <li>DynamoDB</li>
-                    <li>Cloudflare Tunnels</li>
-                    <li>Firebase</li>
-                </ul>
-            </div>
+      </div>
+    </div>
+  </section>
 
-            <div class="stack-category">
-                <h3 data-lang-key="stack-infra-title">Infrastructure & DevOps</h3>
-                <ul class="stack-list">
-                    <li>Docker / Docker Compose</li>
-                    <li>Nginx (Reverse Proxy)</li>
-                    <li>Linux Administration</li>
-                    <li>GitLab CI/CD</li>
-                    <li>VPS Management</li>
-                </ul>
-            </div>
-
-            <div class="stack-category">
-                <h3 data-lang-key="stack-db-title">Databases</h3>
-                <ul class="stack-list">
-                    <li>Oracle Database</li>
-                    <li>PostgreSQL</li>
-                    <li>MySQL</li>
-                    <li>MongoDB</li>
-                    <li>DynamoDB</li>
-                </ul>
-            </div>
-
-            <div class="stack-category">
-                <h3 data-lang-key="stack-backend-title">Backend</h3>
-                <ul class="stack-list">
-                    <li>Node.js / Express</li>
-                    <li>Python</li>
-                    <li>REST APIs</li>
-                    <li>Serverless Functions</li>
-                </ul>
-            </div>
-
-            <div class="stack-category">
-                <h3 data-lang-key="stack-frontend-title">Frontend</h3>
-                <ul class="stack-list">
-                    <li>React</li>
-                    <li>JavaScript (ES6+)</li>
-                    <li>HTML5 / CSS3</li>
-                    <li>Responsive Design</li>
-                </ul>
-            </div>
-
-            <div class="stack-category">
-                <h3 data-lang-key="stack-tools-title">Tools & Methods</h3>
-                <ul class="stack-list">
-                    <li>Git / GitLab</li>
-                    <li>Snipcart (Headless Commerce)</li>
-                    <li>System Architecture</li>
-                    <li>Performance Tuning</li>
-                    <li>TinyCP</li>
-                </ul>
-            </div>
+  <!-- Sobre mí -->
+  <section class="block" id="sobre-mi">
+    <div class="wrap">
+      <div class="block-head">
+        <h2 data-i18n="about.title">Sobre mí</h2>
+      </div>
+      <div class="about">
+        <div class="about-text">
+          <p data-i18n="about.p1">Soy ingeniero de sistemas. Llevo más de seis años poniendo aplicaciones web y móviles en producción y arreglando sistemas complejos cuando fallan.</p>
+          <p data-i18n="about.p2">Me muevo entre el frontend y la infraestructura: diseño la arquitectura del cliente, optimizo lo que está lento y me encargo de que el despliegue sea simple y seguro. He liderado equipos pequeños y he sido responsable de sistemas institucionales con más de 35,000 usuarios.</p>
         </div>
-    </section>
+        <dl class="facts">
+          <div><dt data-i18n="about.f1">Base</dt><dd>Bay Area, California</dd></div>
+          <div><dt data-i18n="about.f2">Formación</dt><dd data-i18n="about.f2v">Ingeniería de Sistemas, Universidad Cooperativa de Colombia</dd></div>
+          <div><dt data-i18n="about.f3">Idiomas</dt><dd data-i18n="about.f3v">Español nativo, inglés profesional</dd></div>
+          <div><dt data-i18n="about.f4">He trabajado en</dt><dd data-i18n="about.f4v">Colombia, Francia, Chile y Estados Unidos</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="section">
-        <div class="section-header">
-            <span class="section-number">04.</span>
-            <h2 class="section-title" data-lang-key="projects-title">Projects</h2>
-        </div>
-        
-        <div class="projects-intro">
-            <p data-lang-key="projects-intro">
-                Proyectos seleccionados donde puedo compartir detalles de arquitectura. La mayoría de mi trabajo 
-                profesional está bajo confidencialidad en repositorios privados.
-            </p>
-        </div>
+  <!-- Contacto -->
+  <section class="contact" id="contacto">
+    <div class="wrap">
+      <h2 data-i18n="contact.title">¿Construimos algo juntos?</h2>
+      <p data-i18n="contact.desc">Busco roles de software engineering (frontend, full-stack o plataforma) y proyectos donde importen tanto la aplicación como la forma de ponerla en producción.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="mailto:ecristian963@gmail.com" data-i18n="contact.email">Escríbeme</a>
+        <a class="btn btn-line" href="https://www.linkedin.com/in/cristian-estrada-romero" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn btn-line" href="/CV" data-i18n="hero.cta2">Descargar CV</a>
+      </div>
+      <div class="cmd">
+        <span aria-hidden="true">$</span>
+        <code>curl -O https://cristianestrada.co/CV</code>
+        <button class="icon-btn" id="copy-btn" type="button" data-i18n-aria="contact.copy" aria-label="Copiar comando">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 3.5v-.75A1.25 1.25 0 0 0 9.25 1.5h-5.5A1.25 1.25 0 0 0 2.5 2.75v5.5A1.25 1.25 0 0 0 3.75 9.5h.75" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
 
-        <div class="projects-grid">
-            <!-- Dutsicakes Project -->
-            <div class="project-card">
-                <div class="project-header">
-                    <div class="project-type" data-lang-key="project1-type">Serverless E-commerce</div>
-                    <a href="https://dutsicakes.com" target="_blank" class="project-link">↗</a>
-                </div>
-                <h3 class="project-title">Dutsicakes - E-commerce con Arquitectura Serverless</h3>
-                <p class="project-description" data-lang-key="project1-desc">
-                    Tienda online de cupcakes y galletas artesanales con arquitectura serverless. Sistema de reviews 
-                    implementado con AWS Lambda, DynamoDB y API Gateway. Headless commerce utilizando Snipcart como CMS 
-                    para gestión de productos y checkout.
-                </p>
-                
-                <div class="project-details">
-                    <div class="project-section">
-                        <h4 data-lang-key="project-challenge">Arquitectura</h4>
-                        <div class="architecture-box">
-                            <pre data-lang-key="project1-architecture">
-Frontend (React) → Snipcart (Checkout/Cart)
-                 ↓
-              Cloudflare (CDN + Security)
-                 ↓
-         API Gateway → Lambda Functions
-                 ↓
-              DynamoDB (Reviews Database)</pre>
-                        </div>
-                    </div>
-                    
-                    <div class="project-section">
-                        <h4 data-lang-key="project-solution">Características Técnicas</h4>
-                        <ul class="project-list">
-                            <li data-lang-key="project1-sol1">Sistema de reviews serverless con Lambda + DynamoDB</li>
-                            <li data-lang-key="project1-sol2">Headless commerce con Snipcart para gestión de productos</li>
-                            <li data-lang-key="project1-sol3">API Gateway para endpoints seguros y escalables</li>
-                            <li data-lang-key="project1-sol4">Cloudflare CDN para performance y protección DDoS</li>
-                            <li data-lang-key="project1-sol5">Arquitectura 100% serverless - zero infrastructure management</li>
-                        </ul>
-                    </div>
-                </div>
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> Cristian Estrada</span>
+    <span data-i18n="footer">Desplegado con GitHub Actions en S3 y CloudFront</span>
+  </div>
+</footer>
 
-                <div class="tech-stack">
-                    <span class="tech-tag">AWS Lambda</span>
-                    <span class="tech-tag">API Gateway</span>
-                    <span class="tech-tag">DynamoDB</span>
-                    <span class="tech-tag">React</span>
-                    <span class="tech-tag">Snipcart</span>
-                    <span class="tech-tag">Cloudflare</span>
-                </div>
+<script>
+  /* ---------- i18n ---------- */
+  var EN = {
+    'nav.projects': 'Projects', 'nav.experience': 'Experience', 'nav.stack': 'Stack', 'nav.about': 'About', 'nav.contact': 'Contact',
+    'hero.status': 'Open to new roles in the Bay Area, California',
+    'hero.lede': 'Software engineer with 6+ years in production. <strong>I build frontends and the infrastructure that serves them</strong> with React, TypeScript, Vue and AWS.',
+    'hero.cta1': 'See projects', 'hero.cta2': 'Download CV',
+    'topo.cap': '<strong>This is how this page reached you.</strong> Your browser resolved the domain through Route 53, and CloudFront delivered it from the closest edge. Every push to GitHub redeploys it to S3.',
+    'topo.ttfb': 'First byte',
+    'projects.title': 'Projects',
+    'projects.intro': 'Production systems where I can show the architecture. Most of my professional work lives in private repositories.',
+    'badge.live': 'Live', 'badge.private': 'Private client app', 'badge.open': 'Open source',
+    'arch.toggle': 'Show architecture',
+    'p.asepad.desc': 'Issuing and verifying occupational-safety certificates. Any company can check in seconds whether a certificate is authentic.',
+    'p.asepad.i1b': '1 week → minutes', 'p.asepad.i1': 'to issue a certificate', 'p.asepad.i2': 'verifiable certificates', 'p.asepad.i3': 'per verification',
+    'p.ejv.desc': 'Assembly management for residential properties: attendance, voting and live statistics, with a mobile app and web panel synced in real time and PDF minutes.',
+    'p.ejv.i1': 'assemblies a month in peak season', 'p.ejv.i2': 'attendees per assembly', 'p.ejv.i3': 'sync latency',
+    'p.duts.desc': 'A cupcake and cookie shop on headless commerce: Snipcart handles cart and checkout, and reviews run on serverless functions with no servers to maintain.',
+    'p.site.title': 'This site',
+    'p.site.desc': 'Static HTML on S3 behind CloudFront, with DNS on Route 53 and an ACM certificate. GitHub Actions deploys through OIDC, so no AWS keys are stored anywhere.',
+    'exp.title': 'Experience',
+    'exp.hyve.d': 'Mar 2026 – Jul 2026', 'exp.cortex.d': 'Oct 2025 – Jan 2026', 'exp.ul.d': 'Mar 2024 – Apr 2025', 'exp.ss.d': 'Jan 2024 – Jul 2025', 'exp.sbs.d': 'Jul 2023 – Jan 2024',
+    'exp.mq.d': 'Mar 2023 – Jul 2023', 'exp.pv.d': 'Sep 2022 – Feb 2023', 'exp.cn.d': 'Jun 2021 – Jul 2022',
+    'exp.hyve.role': 'Testing Engineer',
+    'exp.hyve.1': 'Built a React/Python application that brings server-testing activities and operator workflows into a single interface.',
+    'exp.hyve.2': 'Automated testing utilities with script discovery: more concurrent operations and about 80% less workstation resource usage.',
+    'exp.cortex.role': 'Full-Stack Engineer',
+    'exp.cortex.1': 'Built React and TypeScript features for an AI document-analysis product: client architecture, navigation, editor workflows and LLM services.',
+    'exp.cortex.2': 'Cut PDF viewer rendering from 0.5–1 s to 0.01–0.1 s per page.',
+    'exp.ul.role': 'Software Architect & Infrastructure Engineer',
+    'exp.ul.1': 'Led architecture and operations for infrastructure serving 35,000+ students and staff across campuses, on critical Oracle 19c and Linux environments.',
+    'exp.ul.2': 'Reduced a critical data export from 4 hours to 30 minutes through query optimization and automation.',
+    'exp.ss.role': 'Founder & Technical Lead',
+    'exp.ss.1': 'Founded and led a small team delivering client web and mobile apps: architecture, implementation, deployment and Agile planning.',
+    'exp.ss.2': 'We shipped EventosJV, ASEPAD and Dutsicakes.',
+    'exp.sbs.role': 'Frontend Developer',
+    'exp.sbs.1': 'Broker-facing insurance quotation tools in Vue.js on a Single-SPA microfrontend architecture.',
+    'exp.earlier': 'Earlier experience (2018 – 2023)',
+    'exp.mq.role': 'Technical Consultant',
+    'exp.mq.1': 'Fixed recurring production issues in a React Native app backed by PostgreSQL services and supported its TypeScript migration.',
+    'exp.pv.role': 'Frontend Developer',
+    'exp.pv.1': 'E-commerce modernization: legacy frontend migration, integrations and performance improvements.',
+    'exp.cn.role': 'Lead Developer',
+    'exp.cn.1': 'Accessible Flutter mobile app for older adults (academic project).',
+    'exp.fl.role': 'Freelance & Parquesoft Meta',
+    'exp.fl.1': 'Web and desktop apps for businesses; databases and stored procedures with SQL, C# and .NET.',
+    'stack.spa': 'Microfrontends (Single-SPA)', 'stack.back': 'Backend & data', 'stack.cloud': 'Cloud & infrastructure', 'stack.practice': 'Practice',
+    'stack.p1': 'Application architecture', 'stack.p2': 'Performance optimization', 'stack.p3': 'Incident response', 'stack.p4': 'Test automation', 'stack.p5': 'LLM integration', 'stack.p6': 'Technical documentation',
+    'about.title': 'About',
+    'about.p1': 'I’m a systems engineer. For more than six years I’ve been taking web and mobile apps to production, and fixing complex systems when they break.',
+    'about.p2': 'I work across the frontend and the infrastructure: I design client architecture, speed up what’s slow and keep deployments simple and safe. I’ve led small teams and been responsible for institutional systems with 35,000+ users.',
+    'about.f1': 'Based in', 'about.f2': 'Education', 'about.f2v': 'B.S. Systems Engineering, Universidad Cooperativa de Colombia',
+    'about.f3': 'Languages', 'about.f3v': 'Spanish (native), English (professional)',
+    'about.f4': 'Worked in', 'about.f4v': 'Colombia, France, Chile and the United States',
+    'contact.title': 'Let’s build something together',
+    'contact.desc': 'I’m looking for software engineering roles (frontend, full-stack or platform) and projects where the application matters as much as how it ships.',
+    'contact.email': 'Email me', 'contact.copy': 'Copy command',
+    'footer': 'Deployed with GitHub Actions to S3 and CloudFront'
+  };
+  var ES = {};
+  var nodes = document.querySelectorAll('[data-i18n]');
+  nodes.forEach(function (el) { ES[el.dataset.i18n] = el.innerHTML; });
+  var ES_ARIA = {};
+  document.querySelectorAll('[data-i18n-aria]').forEach(function (el) { ES_ARIA[el.dataset.i18nAria] = el.getAttribute('aria-label'); });
 
-                <div class="project-note">
-                    <small data-lang-key="project1-note">
-                        🚀 Proyecto recién lanzado (2024). Arquitectura serverless diseñada para escalar automáticamente.
-                    </small>
-                </div>
-            </div>
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function read(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 
-            <!-- ASEPAD Project -->
-            <div class="project-card">
-                <div class="project-header">
-                    <div class="project-type" data-lang-key="project2-type">Dockerized Web System</div>
-                    <a href="https://www.asepad.com.co/certificados/" target="_blank" class="project-link">↗</a>
-                </div>
-                <h3 class="project-title">ASEPAD - Sistema de Verificación de Certificados</h3>
-                <p class="project-description" data-lang-key="project2-desc">
-                    Sistema de verificación de autenticidad para certificados en seguridad laboral. Arquitectura 
-                    dockerizada desplegada en VPS con Nginx reverse proxy, base de datos PostgreSQL containerizada, 
-                    y seguridad mediante Cloudflare Tunnels.
-                </p>
-                
-                <div class="project-details">
-                    <div class="project-section">
-                        <h4 data-lang-key="project-challenge">Arquitectura</h4>
-                        <div class="architecture-box">
-                            <pre data-lang-key="project2-architecture">
-Cloudflare Tunnel (Security Layer)
-        ↓
-   Nginx (Reverse Proxy)
-        ↓
-   ├─ Frontend Container (React)
-   ├─ Backend Container (Node.js)
-   └─ PostgreSQL Container (Database)</pre>
-                        </div>
-                    </div>
-                    
-                    <div class="project-section">
-                        <h4 data-lang-key="project-impact">Impact</h4>
-                        <ul class="project-list">
-                            <li data-lang-key="project2-impact1">Emisión de certificados: de <strong>1 semana → pocos minutos</strong></li>
-                            <li data-lang-key="project2-impact2"><strong>+2,500 certificados</strong> emitidos y verificables en plataforma</li>
-                            <li data-lang-key="project2-impact3">Tiempo de búsqueda/verificación <strong>&lt;200ms</strong></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="project-section">
-                        <h4 data-lang-key="project-solution">Solución Implementada</h4>
-                        <ul class="project-list">
-                            <li data-lang-key="project2-sol1">Infraestructura 100% dockerizada en VPS</li>
-                            <li data-lang-key="project2-sol2">Nginx como reverse proxy para enrutamiento de contenedores</li>
-                            <li data-lang-key="project2-sol3">PostgreSQL containerizada para fácil migración/backup</li>
-                            <li data-lang-key="project2-sol4">Cloudflare Tunnels para acceso seguro sin exponer puertos</li>
-                            <li data-lang-key="project2-sol5">Sistema de códigos únicos con índices optimizados</li>
-                        </ul>
-                    </div>
-                </div>
+  var lang = read('language') === 'en' ? 'en' : 'es';
+  function setLang(l) {
+    lang = l; store('language', l);
+    document.documentElement.lang = l;
+    var dict = l === 'en' ? EN : ES;
+    nodes.forEach(function (el) { var v = dict[el.dataset.i18n]; if (v != null) el.innerHTML = v; });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function (el) {
+      var v = l === 'en' ? EN[el.dataset.i18nAria] : ES_ARIA[el.dataset.i18nAria]; if (v) el.setAttribute('aria-label', v);
+    });
+    var b = document.getElementById('lang-btn');
+    b.textContent = l === 'en' ? 'ES' : 'EN';
+    b.setAttribute('aria-label', l === 'en' ? 'Cambiar a español' : 'Switch to English');
+    document.dispatchEvent(new CustomEvent('langchange', { detail: l }));
+  }
+  document.getElementById('lang-btn').addEventListener('click', function () { setLang(lang === 'es' ? 'en' : 'es'); });
+  if (lang !== 'es') setLang(lang);
 
-                <div class="tech-stack">
-                    <span class="tech-tag">Docker</span>
-                    <span class="tech-tag">Nginx</span>
-                    <span class="tech-tag">PostgreSQL</span>
-                    <span class="tech-tag">Cloudflare</span>
-                    <span class="tech-tag">React</span>
-                    <span class="tech-tag">Node.js</span>
-                </div>
-            </div>
+  /* ---------- Tema ---------- */
+  function syncThemeColor() {
+    var t = document.documentElement.getAttribute('data-theme');
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', t === 'dark' ? '#0e1a2b' : '#eef1f4');
+  }
+  syncThemeColor();
+  document.getElementById('theme-btn').addEventListener('click', function () {
+    var t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    store('theme', t);
+    syncThemeColor();
+    document.dispatchEvent(new CustomEvent('themechange'));
+  });
 
-            <!-- EventosJV Project -->
-            <div class="project-card">
-                <div class="project-header">
-                    <div class="project-type" data-lang-key="project3-type">Multi-Container System</div>
-                    <a href="http://eventosjv.sharkstart.co" target="_blank" class="project-link">↗</a>
-                </div>
-                <h3 class="project-title">EventosJV - Sistema de Gestión de Asambleas</h3>
-                <p class="project-description" data-lang-key="project3-desc">
-                    Sistema completo para gestión de asambleas en propiedades horizontales. Panel web administrativo 
-                    y aplicación móvil con sincronización en tiempo real. Infraestructura dockerizada con Firebase para 
-                    backend serverless y autenticación.
-                </p>
-                
-                <div class="project-details">
-                    <div class="project-section">
-                        <h4 data-lang-key="project-challenge">Arquitectura Multi-Plataforma</h4>
-                        <div class="architecture-box">
-                            <pre data-lang-key="project3-architecture">
-Mobile App (React Native) ←→ Firebase (Auth + Realtime DB)
-                          ↕
-Web Admin Panel (React) ←→ Docker Container (Node.js)
-                          ↓
-                    Nginx Reverse Proxy
-                          ↓
-                   PostgreSQL Container</pre>
-                        </div>
-                    </div>
-                    
-                    <div class="project-section">
-                        <h4 data-lang-key="project-impact">Impact</h4>
-                        <ul class="project-list">
-                            <li data-lang-key="project3-impact1"><strong>20-30 asambleas</strong> gestionadas mensualmente (pico marzo-abril)</li>
-                            <li data-lang-key="project3-impact2">Capacidad de <strong>300-400 personas</strong> por asamblea</li>
-                            <li data-lang-key="project3-impact3">Sincronización real-time con latencia <strong>&lt;200ms</strong></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="project-section">
-                        <h4 data-lang-key="project-solution">Características Técnicas</h4>
-                        <ul class="project-list">
-                            <li data-lang-key="project3-sol1">App móvil React Native con almacenamiento offline-first</li>
-                            <li data-lang-key="project3-sol2">Panel administrativo React containerizado</li>
-                            <li data-lang-key="project3-sol3">Firebase para autenticación y sincronización real-time</li>
-                            <li data-lang-key="project3-sol4">Backend Node.js en contenedor Docker</li>
-                            <li data-lang-key="project3-sol5">PostgreSQL containerizada con backups automatizados</li>
-                            <li data-lang-key="project3-sol6">Generación de PDFs con validez legal</li>
-                        </ul>
-                    </div>
-                </div>
+  /* ---------- Menú móvil ---------- */
+  var nav = document.getElementById('nav'), menuBtn = document.getElementById('menu-btn');
+  function setMenu(open) {
+    nav.classList.toggle('open', open);
+    menuBtn.setAttribute('aria-expanded', open);
+    menuBtn.setAttribute('aria-label', open ? (lang === 'en' ? 'Close menu' : 'Cerrar menú') : (lang === 'en' ? 'Open menu' : 'Abrir menú'));
+  }
+  menuBtn.addEventListener('click', function () { setMenu(!nav.classList.contains('open')); });
+  document.querySelectorAll('#nav-links a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+  window.addEventListener('resize', function () { if (innerWidth > 900) setMenu(false); });
 
-                <div class="tech-stack">
-                    <span class="tech-tag">React Native</span>
-                    <span class="tech-tag">React</span>
-                    <span class="tech-tag">Firebase</span>
-                    <span class="tech-tag">Docker</span>
-                    <span class="tech-tag">PostgreSQL</span>
-                    <span class="tech-tag">Node.js</span>
-                </div>
+  /* Sección activa en el menú */
+  if ('IntersectionObserver' in window) {
+    var links = {};
+    document.querySelectorAll('#nav-links a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var a = links[en.target.id]; if (!a || !en.isIntersecting) return;
+        Object.keys(links).forEach(function (k) { links[k].removeAttribute('aria-current'); });
+        a.setAttribute('aria-current', 'true');
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+  }
 
-                <div class="project-note">
-                    <small data-lang-key="project3-note">
-                        📱 App móvil privada para clientes. Mockups de Adobe XD disponibles bajo solicitud.
-                    </small>
-                </div>
-            </div>
+  /* ---------- Copiar comando ---------- */
+  document.getElementById('copy-btn').addEventListener('click', function () {
+    var btn = this, txt = 'curl -O https://cristianestrada.co/CV';
+    if (!navigator.clipboard) return;
+    navigator.clipboard.writeText(txt).then(function () {
+      var old = btn.innerHTML; btn.textContent = lang === 'en' ? 'Copied' : 'Copiado';
+      setTimeout(function () { btn.innerHTML = old; }, 1600);
+    }).catch(function () {});
+  });
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-            <!-- Work in Progress Card -->
-            <div class="project-card wip-card">
-                <div class="wip-badge" data-lang-key="wip-badge">Work in Progress</div>
-                <h3 class="project-title" data-lang-key="wip-title">Proyectos Personales en Desarrollo</h3>
-                <p class="project-description" data-lang-key="wip-desc">
-                    Actualmente trabajando en arquitecturas de microservicios con Kubernetes, integraciones con IA, 
-                    y sistemas de alta disponibilidad. Estos proyectos serán publicados como open-source una vez finalizados.
-                </p>
-            </div>
-        </div>
+  /* ---------- Tiempos reales de esta visita ---------- */
+  (function () {
+    var pop = null;
+    function ms(v) { return Math.max(1, Math.round(v)) + ' ms'; }
+    function fill(id, text, ok) { var el = document.getElementById(id); el.textContent = text; el.classList.toggle('na', !ok); }
+    function run() {
+      var n = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+      if (n) {
+        var dns = n.domainLookupEnd - n.domainLookupStart;
+        fill('t-dns', dns > 0 ? ms(dns) : (lang === 'en' ? 'cached' : 'en caché'), dns > 0);
+        var tls = n.secureConnectionStart > 0 ? n.connectEnd - n.secureConnectionStart : 0;
+        fill('t-tls', tls > 0 ? ms(tls) : (lang === 'en' ? 'reused' : 'reutilizada'), tls > 0);
+        var ttfb = n.responseStart - n.requestStart;
+        if (ttfb > 0) fill('t-ttfb', ms(ttfb), true);
+      }
+      if (pop) fill('t-pop', pop, true);
+    }
+    function start() {
+      run();
+      if (location.protocol.indexOf('http') === 0) {
+        fetch(location.origin + '/', { method: 'HEAD', cache: 'no-store' }).then(function (r) {
+          var h = r.headers.get('x-amz-cf-pop');
+          if (h) { pop = h.split('-')[0]; run(); }
+        }).catch(function () {});
+      }
+    }
+    if (document.readyState === 'complete') start(); else addEventListener('load', function () { setTimeout(start, 0); });
+    document.addEventListener('langchange', run);
+  })();
+</script>
 
-        <div class="projects-footer">
-            <p data-lang-key="projects-footer">
-                <strong>Sobre repositorios:</strong> La mayor parte de mi experiencia profesional involucra 
-                código propietario en repositorios privados o GitLab self-hosted (universidad, corporativos, 
-                proyectos por contrato), por lo que no puedo mostrar el código fuente. Puedo discutir 
-                arquitectura, decisiones técnicas y resolver problemas en tiempo real durante entrevistas.
-            </p>
-        </div>
-    </section>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+<script type="module">
+  /* ---------- Topología 3D (Three.js) ---------- */
+  const stage = document.getElementById('topo-stage');
+  const canvas = document.getElementById('topo-canvas');
+  const fallback = () => { document.getElementById('topo-fallback').hidden = false; canvas.remove(); };
 
-    <!-- Contact Section -->
-    <section id="contact" class="section">
-        <div class="section-header">
-            <span class="section-number">05.</span>
-            <h2 class="section-title" data-lang-key="contact-title">Contact</h2>
-        </div>
-        <div class="contact-content">
-            <h2 data-lang-key="contact-heading">Let's Build Something</h2>
-            <p data-lang-key="contact-desc">
-                Disponible para arquitectura de sistemas, desarrollo full-stack, y consultoría en infraestructura cloud. 
-                Si buscas un ingeniero que pueda diseñar, desarrollar y deployar soluciones end-to-end, hablemos.
-            </p>
-            <div class="contact-links">
-                <a href="mailto:ecristian963@gmail.com" class="contact-link">Email</a>
-                <a href="https://www.linkedin.com/in/cristian-rodrigo-estrada-romero-3a1989193/" class="contact-link" target="_blank">LinkedIn</a>
-                <a href="https://github.com/CristianEstrada" class="contact-link" target="_blank">GitHub</a>
-                <a href="https://dev.to/cristianestrada" class="contact-link" target="_blank" data-lang-key="contact-blog">Blog ↗</a>
-                <a href="/cv.pdf" class="contact-link" download data-lang-key="contact-cv">Download CV</a>
-            </div>
-        </div>
-    </section>
+  let THREE, renderer;
+  try {
+    THREE = await import('three');
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  } catch (e) { fallback(); }
 
-    <!-- Footer -->
-    <footer>
-        <p data-lang-key="footer-text">© 2024 Cristian Estrada. Architected with precision.</p>
-    </footer>
+  if (renderer) init();
 
-    <script>
-        // Theme Toggle
-        function toggleTheme() {
-            const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
+  function init() {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.body.setAttribute('data-theme', savedTheme);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
+    const css = () => getComputedStyle(document.documentElement);
+    const col = (v) => new THREE.Color(css().getPropertyValue(v).trim());
 
-        // i18n Implementation
-        const translations = {
-            en: {
-                'nav-about': 'about',
-                'nav-experience': 'experience',
-                'nav-stack': 'stack',
-                'nav-projects': 'projects',
-                'nav-contact': 'contact',
-                'hero-whoami': 'Software Full-Stack Engineer | Cloud | DevOps',
-                'hero-subtitle': 'Architecture, development, and deployment of scalable systems.',
-                'hero-expertise': 'cloud/  databases/  devops/  frontend/  backend/',
-                'cta-view': 'View Projects',
-                'cta-contact': 'Get in Touch',
-                'about-title': 'About',
-                'about-p1': 'Systems Engineer with 3.5 years of experience in full-stack development, database administration, and infrastructure management. My approach spans from application development to production deployment.',
-                'about-p2': 'I have worked in corporate environments and software houses, implementing critical systems, optimizing enterprise databases (Oracle, PostgreSQL, MySQL), and developing web and mobile applications. I manage dockerized infrastructure with Nginx as reverse proxy, and have implemented serverless solutions with AWS Lambda and DynamoDB.',
-                'about-p3': 'I currently manage multiple production applications with multi-container Docker, using Cloudflare Tunnels for security and containerized databases. Looking for opportunities to continue growing in full-stack development and system architecture.',
-                'focus-title': 'Expertise',
-                'focus-1': 'Full-Stack Development',
-                'focus-2': 'Database Engineering',
-                'focus-3': 'Infrastructure & DevOps',
-                'focus-4': 'Docker & Containerization',
-                'focus-5': 'AWS Serverless (Lambda)',
-                'focus-6': 'System Administration',
-                'exp-title': 'Experience',
-                'exp1-title': 'Infrastructure & Deployment',
-                'exp1-desc': 'Implementation and administration of infrastructure with multi-container Docker, VPS orchestration, Nginx reverse proxy, and Cloudflare Tunnels for security. Experience with AWS Lambda, DynamoDB, and API Gateway for serverless functions. Dockerized database management for portability and migration.',
-                'exp2-title': 'Database Engineering & Architecture',
-                'exp2-desc': 'Oracle Database administration in university institution, scalable data architecture design, and critical query optimization. Optimized index implementation reducing daily exports from <strong>4 hours to 30 minutes</strong> (87.5% improvement). Maintenance downtime reduction from <strong>8 hours to 2 hours</strong> (75% reduction). Sharding labs per campus for test environments.',
-                'exp3-title': 'Full-Stack Development',
-                'exp3-desc': 'Development of complete web and mobile applications: e-commerce, enterprise management systems, React Native mobile applications. Frontend and backend architecture, REST API implementation, cloud service integration, and production deployment. Experience with headless commerce and modern CMS.',
-                'exp4-title': 'System Debugging & Refactoring',
-                'exp4-desc': 'Resolution of critical issues in legacy systems by contract, reducing technical debt by <strong>40-45%</strong> through architecture analysis, bottleneck identification, and strategic refactoring. Work with multiple stacks (Java, Python, JavaScript) applying software engineering principles to improve maintainability, scalability, and performance.',
-                'stack-title': 'Technical Stack',
-                'stack-cloud-title': 'Cloud & Serverless',
-                'stack-infra-title': 'Infrastructure & DevOps',
-                'stack-db-title': 'Databases',
-                'stack-backend-title': 'Backend',
-                'stack-frontend-title': 'Frontend',
-                'stack-tools-title': 'Tools & Methods',
-                'projects-title': 'Projects',
-                'projects-intro': 'Selected projects where I can share architecture details. Most of my professional work is under confidentiality in private repositories.',
-                'project1-type': 'Serverless E-commerce',
-                'project1-desc': 'Online store for artisan cupcakes and cookies with serverless architecture. Review system implemented with AWS Lambda, DynamoDB, and API Gateway. Headless commerce using Snipcart as CMS for product management and checkout.',
-                'project-challenge': 'Architecture',
-                'project1-architecture': 'Frontend (React) → Snipcart (Checkout/Cart)\n                 ↓\n              Cloudflare (CDN + Security)\n                 ↓\n         API Gateway → Lambda Functions\n                 ↓\n              DynamoDB (Reviews Database)',
-                'project-solution': 'Technical Features',
-                'project1-sol1': 'Serverless review system with Lambda + DynamoDB',
-                'project1-sol2': 'Headless commerce with Snipcart for product management',
-                'project1-sol3': 'API Gateway for secure and scalable endpoints',
-                'project1-sol4': 'Cloudflare CDN for performance and DDoS protection',
-                'project1-sol5': '100% serverless architecture - zero infrastructure management',
-                'project1-note': '🚀 Recently launched project (2024). Serverless architecture designed to scale automatically.',
-                'project2-type': 'Dockerized Web System',
-                'project2-desc': 'Verification system for labor safety certificates. Dockerized architecture deployed on VPS with Nginx reverse proxy, containerized PostgreSQL database, and security via Cloudflare Tunnels.',
-                'project2-architecture': 'Cloudflare Tunnel (Security Layer)\n        ↓\n   Nginx (Reverse Proxy)\n        ↓\n   ├─ Frontend Container (React)\n   ├─ Backend Container (Node.js)\n   └─ PostgreSQL Container (Database)',
-                'project-impact': 'Impact',
-                'project2-impact1': 'Certificate issuance: from <strong>1 week → few minutes</strong>',
-                'project2-impact2': '<strong>+2,500 certificates</strong> issued and verifiable on platform',
-                'project2-impact3': 'Search/verification time <strong>&lt;200ms</strong>',
-                'project2-sol1': '100% dockerized infrastructure on VPS',
-                'project2-sol2': 'Nginx as reverse proxy for container routing',
-                'project2-sol3': 'Containerized PostgreSQL for easy migration/backup',
-                'project2-sol4': 'Cloudflare Tunnels for secure access without exposing ports',
-                'project2-sol5': 'Unique code system with optimized indexes',
-                'project3-type': 'Multi-Container System',
-                'project3-desc': 'Complete system for assembly management in horizontal properties. Administrative web panel and mobile application with real-time synchronization. Dockerized infrastructure with Firebase for serverless backend and authentication.',
-                'project3-architecture': 'Mobile App (React Native) ←→ Firebase (Auth + Realtime DB)\n                          ↕\nWeb Admin Panel (React) ←→ Docker Container (Node.js)\n                          ↓\n                    Nginx Reverse Proxy\n                          ↓\n                   PostgreSQL Container',
-                'project3-impact1': '<strong>20-30 assemblies</strong> managed monthly (peak March-April)',
-                'project3-impact2': 'Capacity of <strong>300-400 people</strong> per assembly',
-                'project3-impact3': 'Real-time synchronization with latency <strong>&lt;200ms</strong>',
-                'project3-sol1': 'React Native mobile app with offline-first storage',
-                'project3-sol2': 'Containerized React administrative panel',
-                'project3-sol3': 'Firebase for authentication and real-time synchronization',
-                'project3-sol4': 'Node.js backend in Docker container',
-                'project3-sol5': 'Containerized PostgreSQL with automated backups',
-                'project3-sol6': 'PDF generation with legal validity',
-                'project3-note': '📱 Private mobile app for clients. Adobe XD mockups available upon request.',
-                'wip-badge': 'Work in Progress',
-                'wip-title': 'Personal Projects in Development',
-                'wip-desc': 'Currently working on personal projects with modern architectures, AI integrations, and performance optimizations. These projects will be published as open-source once completed.',
-                'projects-footer': '<strong>About repositories:</strong> Most of my professional experience involves proprietary code in private repositories or self-hosted GitLab (university, corporate, contract projects), so I cannot show the source code. I can discuss architecture, technical decisions, and solve problems in real-time during interviews.',
-                'contact-title': 'Contact',
-                'contact-heading': "Let's Build Something",
-                'contact-desc': 'Available for system architecture, full-stack development, and cloud infrastructure consulting. If you are looking for an engineer who can design, develop, and deploy end-to-end solutions, let\'s talk.',
-                'contact-blog': 'Blog ↗',
-                'contact-cv': 'Download CV',
-                'footer-text': '© 2024 Cristian Estrada. Architected with precision.'
-            },
-            es: {
-                'nav-about': 'sobre mí',
-                'nav-experience': 'experiencia',
-                'nav-stack': 'stack',
-                'nav-projects': 'proyectos',
-                'nav-contact': 'contacto',
-                'hero-whoami': 'Software Full-Stack Engineer | Cloud | DevOps',
-                'hero-subtitle': 'Arquitectura, desarrollo y deployment de sistemas escalables.',
-                'hero-expertise': 'cloud/  databases/  devops/  frontend/  backend/',
-                'cta-view': 'Ver Proyectos',
-                'cta-contact': 'Contactar',
-                'about-title': 'Sobre mí',
-                'about-p1': 'Ingeniero de sistemas con 3.5 años de experiencia en desarrollo full-stack, administración de bases de datos y gestión de infraestructura. Mi enfoque abarca desde el desarrollo de aplicaciones hasta el deployment en producción.',
-                'about-p2': 'He trabajado en entornos corporativos y casas de software, implementando sistemas críticos, optimizando bases de datos empresariales (Oracle, PostgreSQL, MySQL), y desarrollando aplicaciones web y móviles. Manejo infraestructura dockerizada con Nginx como reverse proxy, y he implementado soluciones serverless con AWS Lambda y DynamoDB.',
-                'about-p3': 'Actualmente administro múltiples aplicaciones en producción con Docker multi-container, utilizando Cloudflare Tunnels para seguridad y bases de datos containerizadas. Busco oportunidades para seguir creciendo en desarrollo full-stack y arquitectura de sistemas.',
-                'focus-title': 'Expertise',
-                'focus-1': 'Desarrollo Full-Stack',
-                'focus-2': 'Ingeniería de Bases de Datos',
-                'focus-3': 'Infraestructura & DevOps',
-                'focus-4': 'Docker & Containerización',
-                'focus-5': 'AWS Serverless (Lambda)',
-                'focus-6': 'Administración de Sistemas',
-                'exp-title': 'Experiencia',
-                'exp1-title': 'Infraestructura & Deployment',
-                'exp1-desc': 'Implementación y administración de infraestructura con Docker multi-container, orquestación en VPS, Nginx reverse proxy, y Cloudflare Tunnels para seguridad. Experiencia con AWS Lambda, DynamoDB y API Gateway para funciones serverless. Gestión de bases de datos dockerizadas para portabilidad y migración.',
-                'exp2-title': 'Ingeniería de BD & Arquitectura',
-                'exp2-desc': 'Administración de Oracle Database en institución universitaria, diseño de arquitecturas de datos escalables y optimización de queries críticos. Implementación de índices optimizados reduciendo exports diarios de <strong>4 horas a 30 minutos</strong> (87.5% mejora). Reducción de downtime en mantenimientos de <strong>8 horas a 2 horas</strong> (75% reducción). Laboratorios con sharding por campus para ambientes de prueba.',
-                'exp3-title': 'Desarrollo Full-Stack',
-                'exp3-desc': 'Desarrollo de aplicaciones web y móviles completas: e-commerce, sistemas de gestión empresarial, aplicaciones mobile React Native. Arquitectura frontend y backend, implementación de APIs REST, integración con servicios cloud, y deployment en producción. Experiencia con headless commerce y CMS modernos.',
-                'exp4-title': 'Debugging & Refactorización de Sistemas',
-                'exp4-desc': 'Resolución de problemas críticos en sistemas legacy por contrato, reduciendo deuda técnica en <strong>40-45%</strong> mediante análisis de arquitectura, identificación de cuellos de botella, y refactorización estratégica. Trabajo con múltiples stacks (Java, Python, JavaScript) aplicando principios de ingeniería de software para mejorar mantenibilidad, escalabilidad y rendimiento.',
-                'stack-title': 'Stack Técnico',
-                'stack-cloud-title': 'Cloud & Serverless',
-                'stack-infra-title': 'Infraestructura & DevOps',
-                'stack-db-title': 'Bases de Datos',
-                'stack-backend-title': 'Backend',
-                'stack-frontend-title': 'Frontend',
-                'stack-tools-title': 'Herramientas & Métodos',
-                'projects-title': 'Proyectos',
-                'projects-intro': 'Proyectos seleccionados donde puedo compartir detalles de arquitectura. La mayoría de mi trabajo profesional está bajo confidencialidad en repositorios privados.',
-                'project1-type': 'E-commerce Serverless',
-                'project1-desc': 'Tienda online de cupcakes y galletas artesanales con arquitectura serverless. Sistema de reviews implementado con AWS Lambda, DynamoDB y API Gateway. Headless commerce utilizando Snipcart como CMS para gestión de productos y checkout.',
-                'project-challenge': 'Arquitectura',
-                'project1-architecture': 'Frontend (React) → Snipcart (Checkout/Cart)\n                 ↓\n              Cloudflare (CDN + Security)\n                 ↓\n         API Gateway → Lambda Functions\n                 ↓\n              DynamoDB (Reviews Database)',
-                'project-solution': 'Características Técnicas',
-                'project1-sol1': 'Sistema de reviews serverless con Lambda + DynamoDB',
-                'project1-sol2': 'Headless commerce con Snipcart para gestión de productos',
-                'project1-sol3': 'API Gateway para endpoints seguros y escalables',
-                'project1-sol4': 'Cloudflare CDN para performance y protección DDoS',
-                'project1-sol5': 'Arquitectura 100% serverless - zero infrastructure management',
-                'project1-note': '🚀 Proyecto recién lanzado (2024). Arquitectura serverless diseñada para escalar automáticamente.',
-                'project2-type': 'Sistema Web Dockerizado',
-                'project2-desc': 'Sistema de verificación de autenticidad para certificados en seguridad laboral. Arquitectura dockerizada desplegada en VPS con Nginx reverse proxy, base de datos PostgreSQL containerizada, y seguridad mediante Cloudflare Tunnels.',
-                'project2-architecture': 'Cloudflare Tunnel (Security Layer)\n        ↓\n   Nginx (Reverse Proxy)\n        ↓\n   ├─ Frontend Container (React)\n   ├─ Backend Container (Node.js)\n   └─ PostgreSQL Container (Database)',
-                'project-impact': 'Impacto',
-                'project2-impact1': 'Emisión de certificados: de <strong>1 semana → pocos minutos</strong>',
-                'project2-impact2': '<strong>+2,500 certificados</strong> emitidos y verificables en plataforma',
-                'project2-impact3': 'Tiempo de búsqueda/verificación <strong>&lt;200ms</strong>',
-                'project2-sol1': 'Infraestructura 100% dockerizada en VPS',
-                'project2-sol2': 'Nginx como reverse proxy para enrutamiento de contenedores',
-                'project2-sol3': 'PostgreSQL containerizada para fácil migración/backup',
-                'project2-sol4': 'Cloudflare Tunnels para acceso seguro sin exponer puertos',
-                'project2-sol5': 'Sistema de códigos únicos con índices optimizados',
-                'project3-type': 'Sistema Multi-Container',
-                'project3-desc': 'Sistema completo para gestión de asambleas en propiedades horizontales. Panel web administrativo y aplicación móvil con sincronización en tiempo real. Infraestructura dockerizada con Firebase para backend serverless y autenticación.',
-                'project3-architecture': 'Mobile App (React Native) ←→ Firebase (Auth + Realtime DB)\n                          ↕\nWeb Admin Panel (React) ←→ Docker Container (Node.js)\n                          ↓\n                    Nginx Reverse Proxy\n                          ↓\n                   PostgreSQL Container',
-                'project3-impact1': '<strong>20-30 asambleas</strong> gestionadas mensualmente (pico marzo-abril)',
-                'project3-impact2': 'Capacidad de <strong>300-400 personas</strong> por asamblea',
-                'project3-impact3': 'Sincronización real-time con latencia <strong>&lt;200ms</strong>',
-                'project3-sol1': 'App móvil React Native con almacenamiento offline-first',
-                'project3-sol2': 'Panel administrativo React containerizado',
-                'project3-sol3': 'Firebase para autenticación y sincronización real-time',
-                'project3-sol4': 'Backend Node.js en contenedor Docker',
-                'project3-sol5': 'PostgreSQL containerizada con backups automatizados',
-                'project3-sol6': 'Generación de PDFs con validez legal',
-                'project3-note': '📱 App móvil privada para clientes. Mockups de Adobe XD disponibles bajo solicitud.',
-                'wip-badge': 'En Desarrollo',
-                'wip-title': 'Proyectos Personales en Desarrollo',
-                'wip-desc': 'Actualmente trabajando en proyectos personales con arquitecturas modernas, integraciones con IA, y optimizaciones de rendimiento. Estos proyectos serán publicados como open-source una vez finalizados.',
-                'projects-footer': '<strong>Sobre repositorios:</strong> La mayor parte de mi experiencia profesional involucra código propietario en repositorios privados o GitLab self-hosted (universidad, corporativos, proyectos por contrato), por lo que no puedo mostrar el código fuente. Puedo discutir arquitectura, decisiones técnicas y resolver problemas en tiempo real durante entrevistas.',
-                'contact-title': 'Contacto',
-                'contact-heading': 'Construyamos Algo',
-                'contact-desc': 'Disponible para arquitectura de sistemas, desarrollo full-stack, y consultoría en infraestructura cloud. Si buscas un ingeniero que pueda diseñar, desarrollar y deployar soluciones end-to-end, hablemos.',
-                'contact-blog': 'Blog ↗',
-                'contact-cv': 'Descargar CV',
-                'footer-text': '© 2024 Cristian Estrada. Architected with precision.'
-            }
-        };
+    const world = new THREE.Group();
+    scene.add(world);
 
-        let currentLang = localStorage.getItem('language') || 'es';
+    const N = {
+      you: { p: [-4.0,  0.3,  1.4], label: { es: 'Tú', en: 'You' }, kind: 'you' },
+      r53: { p: [-1.5,  1.7, -0.9], label: { es: 'Route 53', en: 'Route 53' } },
+      cf:  { p: [ 0.9,  0.1,  0.8], label: { es: 'CloudFront', en: 'CloudFront' } },
+      s3:  { p: [ 3.7, -0.3, -0.9], label: { es: 'S3', en: 'S3' } },
+      gh:  { p: [ 2.0, -2.1,  2.0], label: { es: 'GitHub Actions', en: 'GitHub Actions' } },
+    };
+    const edges = [
+      { a: 'you', b: 'r53', k: 'req' },
+      { a: 'r53', b: 'cf',  k: 'req' },
+      { a: 'you', b: 'cf',  k: 'req' },
+      { a: 'cf',  b: 's3',  k: 'req' },
+      { a: 'gh',  b: 's3',  k: 'deploy' },
+      { a: 'gh',  b: 'cf',  k: 'deploy' },
+    ];
 
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('language', lang);
-            document.documentElement.lang = lang;
-            
-            document.querySelector('.lang-toggle').textContent = lang === 'es' ? 'EN' : 'ES';
-            
-            document.querySelectorAll('[data-lang-key]').forEach(element => {
-                const key = element.getAttribute('data-lang-key');
-                if (translations[lang][key]) {
-                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                        element.placeholder = translations[lang][key];
-                    } else {
-                        element.innerHTML = translations[lang][key];
-                    }
-                }
-            });
-        }
+    const lineMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 });
+    const dashMat = new THREE.LineDashedMaterial({ dashSize: 0.18, gapSize: 0.14, transparent: true, opacity: 0.6 });
+    const nodeMat = new THREE.LineBasicMaterial();
+    const youMat = new THREE.MeshBasicMaterial();
+    const packetMat = new THREE.MeshBasicMaterial();
+    const gridMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.45 });
+    const FLOOR = -3.0;
 
-        function toggleLanguage() {
-            setLanguage(currentLang === 'es' ? 'en' : 'es');
-        }
+    const grid = new THREE.GridHelper(13, 13);
+    grid.material = gridMat;
+    grid.position.y = FLOOR;
+    world.add(grid);
 
-        setLanguage(currentLang);
+    for (const n of Object.values(N)) {
+      n.v = new THREE.Vector3(...n.p);
+      n.obj = n.kind === 'you'
+        ? new THREE.Mesh(new THREE.SphereGeometry(0.3, 24, 16), youMat)
+        : new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(0.8, 0.8, 0.8)), nodeMat);
+      n.obj.position.copy(n.v);
+      world.add(n.obj);
+      world.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([n.v, new THREE.Vector3(n.v.x, FLOOR, n.v.z)]), gridMat));
+    }
 
-        // Menú móvil
-        function toggleMenu(force) {
-            const nav = document.querySelector('nav');
-            const open = typeof force === 'boolean' ? force : !nav.classList.contains('open');
-            nav.classList.toggle('open', open);
-            const btn = document.querySelector('.menu-toggle');
-            btn.setAttribute('aria-expanded', open);
-            btn.textContent = open ? '✕' : '☰';
-        }
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
-        window.addEventListener('resize', () => { if (window.innerWidth > 960) toggleMenu(false); });
+    for (const e of edges) {
+      const A = N[e.a].v, B = N[e.b].v;
+      const mid = A.clone().add(B).multiplyScalar(0.5); mid.y += 0.6;
+      e.curve = new THREE.QuadraticBezierCurve3(A, mid, B);
+      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(e.curve.getPoints(48)), e.k === 'deploy' ? dashMat : lineMat);
+      if (e.k === 'deploy') line.computeLineDistances();
+      world.add(line);
+    }
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                toggleMenu(false);
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
+    const packetGeo = new THREE.SphereGeometry(0.08, 12, 8);
+    const packets = [];
+    edges.forEach((e, i) => {
+      const count = e.k === 'deploy' ? 1 : 2;
+      for (let j = 0; j < count; j++) {
+        const m = new THREE.Mesh(packetGeo, packetMat);
+        world.add(m);
+        packets.push({ m, e, t: (j / count + i * 0.17) % 1, speed: e.k === 'deploy' ? 0.12 : 0.22 + (i % 3) * 0.03 });
+      }
+    });
+
+    const labels = {};
+    for (const [id, n] of Object.entries(N)) {
+      const el = document.createElement('div');
+      el.className = 'topo-label' + (n.kind === 'you' ? ' is-you' : '');
+      el.textContent = n.label[document.documentElement.lang === 'en' ? 'en' : 'es'];
+      stage.appendChild(el);
+      labels[id] = el;
+    }
+    document.addEventListener('langchange', (ev) => {
+      for (const [id, n] of Object.entries(N)) labels[id].textContent = n.label[ev.detail];
+      if (reduce) render();
+    });
+
+    function applyColors() {
+      lineMat.color.copy(col('--graphite')); dashMat.color.copy(col('--graphite'));
+      nodeMat.color.copy(col('--ink')); youMat.color.copy(col('--ink'));
+      packetMat.color.copy(col('--signal')); gridMat.color.copy(col('--rule'));
+    }
+    applyColors();
+    document.addEventListener('themechange', () => { applyColors(); if (reduce) render(); });
+
+    function resize() {
+      const w = stage.clientWidth, h = stage.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      const dist = w / h < 1.1 ? 15.5 : 12;
+      camera.position.set(0, 2.6, dist);
+      camera.lookAt(0, -0.2, 0);
+      camera.updateProjectionMatrix();
+    }
+
+    let yaw = -0.3, pitch = 0, targetYaw = yaw, targetPitch = 0, dragging = false, lastX = 0, lastY = 0, idle = 0;
+    stage.addEventListener('pointerdown', (e) => { dragging = true; lastX = e.clientX; lastY = e.clientY; stage.setPointerCapture(e.pointerId); });
+    stage.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      targetYaw += (e.clientX - lastX) * 0.008;
+      targetPitch = Math.max(-0.3, Math.min(0.3, targetPitch + (e.clientY - lastY) * 0.004));
+      lastX = e.clientX; lastY = e.clientY; idle = 0;
+      if (reduce) { yaw = targetYaw; pitch = targetPitch; render(); }
+    });
+    const end = () => { dragging = false; };
+    stage.addEventListener('pointerup', end);
+    stage.addEventListener('pointercancel', end);
+
+    const tmp = new THREE.Vector3();
+    function placeLabels() {
+      const w = stage.clientWidth, h = stage.clientHeight;
+      for (const [id, n] of Object.entries(N)) {
+        n.obj.getWorldPosition(tmp);
+        tmp.y += n.kind === 'you' ? 0.62 : 0.78;
+        tmp.project(camera);
+        labels[id].style.transform = `translate(${(tmp.x * 0.5 + 0.5) * w}px, ${(-tmp.y * 0.5 + 0.5) * h}px) translate(-50%, -100%)`;
+      }
+    }
+
+    function render() {
+      world.rotation.y = yaw;
+      world.rotation.x = pitch;
+      renderer.render(scene, camera);
+      placeLabels();
+    }
+
+    let visible = true, running = false, last = 0;
+    function tick(now) {
+      if (!visible) { running = false; return; }
+      const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
+      idle += dt;
+      if (!dragging && idle > 2.5) targetYaw += dt * 0.12;
+      yaw += (targetYaw - yaw) * 0.08;
+      pitch += (targetPitch - pitch) * 0.08;
+      for (const p of packets) { p.t = (p.t + dt * p.speed) % 1; p.m.position.copy(p.e.curve.getPoint(p.t)); }
+      for (const n of Object.values(N)) if (n.kind !== 'you') n.obj.rotation.y += dt * 0.25;
+      render();
+      requestAnimationFrame(tick);
+    }
+    function startLoop() { if (reduce || running) return; running = true; last = performance.now(); requestAnimationFrame(tick); }
+
+    new ResizeObserver(() => { resize(); render(); }).observe(stage);
+    new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) startLoop(); }).observe(stage);
+
+    resize();
+    for (const p of packets) p.m.position.copy(p.e.curve.getPoint(p.t));
+    render();
+    startLoop();
+  }
+</script>
 </body>
 </html>
