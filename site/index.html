@@ -591,31 +591,91 @@
             font-family: 'Monaco', monospace;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 1.8rem;
-            }
+        /* ===== Responsive ===== */
+        html { scroll-padding-top: 80px; -webkit-text-size-adjust: 100%; }
+        body { overflow-x: hidden; }
+        img, svg, video { max-width: 100%; height: auto; }
+        p, li, h1, h2, h3, a { overflow-wrap: break-word; }
 
-            .about-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Evita que el contenido ancho (diagramas <pre>) estire las tarjetas */
+        .about-grid > *, .experience-grid > *, .stack-grid > *, .projects-grid > * { min-width: 0; }
+        .projects-grid { grid-template-columns: minmax(0, 1fr); }
+        .experience-grid { grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr)); }
+        .stack-grid { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
+        .project-header { gap: 1rem; }
 
-            .stack-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Botón de menú (solo móvil/tablet) */
+        .menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: 'Monaco', monospace;
+            font-size: 1rem;
+            line-height: 1;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+        }
 
-            .experience-grid {
-                grid-template-columns: 1fr;
-            }
-
+        @media (max-width: 960px) {
+            .menu-toggle { display: inline-block; }
+            .nav-controls { gap: 0.75rem; }
+            .controls { gap: 0.5rem; }
             .nav-links {
                 display: none;
-            }
-
-            .cta-buttons {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
                 flex-direction: column;
+                gap: 0;
+                background: var(--bg-primary);
+                border-bottom: 1px solid var(--border-color);
+                padding: 0.5rem 5%;
             }
+            nav.open .nav-links { display: flex; }
+            .nav-links li { border-bottom: 1px solid var(--border-color); }
+            .nav-links li:last-child { border-bottom: none; }
+            .nav-links a { display: block; padding: 0.9rem 0; font-size: 1rem; }
+            .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.25rem; }
+            .hero {
+                min-height: auto;
+                margin-top: 0;
+                padding: 6.5rem 1.25rem 3.5rem;
+            }
+            .terminal-body { padding: 1.5rem 1.25rem; font-size: 0.9rem; }
+            .terminal-output { margin-left: 0.5rem; }
+            .hero-title { font-size: 1.9rem; line-height: 1.25; }
+            .hero-subtitle { font-size: 1.05rem; }
+            .cta-buttons { flex-direction: column; }
+            .cta-buttons .btn { text-align: center; }
+
+            .section { padding: 4rem 1.25rem; }
+            .section-header { margin-bottom: 2rem; }
+            .section-title { font-size: 1.5rem; }
+            .about-text { font-size: 0.98rem; }
+
+            .exp-card, .stack-category { padding: 1.5rem; }
+            .project-card { padding: 1.5rem 1.25rem; }
+            .project-title { font-size: 1.25rem; }
+            .architecture-box { padding: 0.9rem 0.75rem; font-size: clamp(0.6rem, 2.55vw, 0.85rem); }
+            .projects-intro, .projects-footer { padding: 1.25rem; }
+
+            .contact-content h2 { font-size: 1.8rem; }
+            .contact-content p { font-size: 1rem; }
+            .contact-links { flex-direction: column; }
+            .contact-link { text-align: center; }
+            footer { padding: 2rem 1.25rem; }
+        }
+
+        @media (max-width: 380px) {
+            .logo { font-size: 0.9rem; }
+            .hero-title { font-size: 1.65rem; }
+            .terminal-title { display: none; }
         }
 
         .hidden {
@@ -628,7 +688,7 @@
     <nav>
         <div class="logo">cristian.estrada</div>
         <div class="nav-controls">
-            <ul class="nav-links">
+            <ul class="nav-links" id="nav-links">
                 <li><a href="#about" data-lang-key="nav-about">about</a></li>
                 <li><a href="#experience" data-lang-key="nav-experience">experience</a></li>
                 <li><a href="#stack" data-lang-key="nav-stack">stack</a></li>
@@ -636,8 +696,9 @@
                 <li><a href="#contact" data-lang-key="nav-contact">contact</a></li>
             </ul>
             <div class="controls">
-                <button class="theme-toggle" onclick="toggleTheme()">◐</button>
-                <button class="lang-toggle" onclick="toggleLanguage()">EN</button>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">◐</button>
+                <button class="lang-toggle" onclick="toggleLanguage()" aria-label="Cambiar idioma">EN</button>
+                <button class="menu-toggle" onclick="toggleMenu()" aria-label="Menú" aria-expanded="false" aria-controls="nav-links">☰</button>
             </div>
         </div>
     </nav>
@@ -1334,9 +1395,22 @@ Web Admin Panel (React) ←→ Docker Container (Node.js)
 
         setLanguage(currentLang);
 
+        // Menú móvil
+        function toggleMenu(force) {
+            const nav = document.querySelector('nav');
+            const open = typeof force === 'boolean' ? force : !nav.classList.contains('open');
+            nav.classList.toggle('open', open);
+            const btn = document.querySelector('.menu-toggle');
+            btn.setAttribute('aria-expanded', open);
+            btn.textContent = open ? '✕' : '☰';
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMenu(false); });
+        window.addEventListener('resize', () => { if (window.innerWidth > 960) toggleMenu(false); });
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
+                toggleMenu(false);
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
