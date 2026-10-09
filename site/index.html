@@ -187,9 +187,13 @@
   }
   .topo-stage .topo-fallback { display: none; }
   .topo-stage.no-webgl .topo-fallback { display: grid; }
-  .project > .viz { grid-column: 1 / -1; margin-top: 0; }
-  .viz { border: 1px solid var(--rule); border-radius: 10px; background: color-mix(in srgb, var(--sheet) 70%, transparent); overflow: hidden; }
-  .viz-stage { aspect-ratio: 21 / 8; min-height: 260px; }
+  .viz { container-type: inline-size; margin-top: 1.5rem; border: 1px solid var(--rule); border-radius: 10px; background: color-mix(in srgb, var(--sheet) 70%, transparent); overflow: hidden; }
+  .viz .viz-stage { aspect-ratio: 16 / 9; }
+  /* Recuadro angosto: el flujo pasa a vertical (lo decide también el JS con el mismo umbral) */
+  @container (max-width: 560px) {
+    .viz .viz-stage { aspect-ratio: 4 / 4.6; }
+    .viz .viz-stage .topo-label { font-size: .6875rem; padding: .15rem .35rem; }
+  }
   .viz figcaption { border-top: 1px solid var(--rule); padding: .65rem .9rem; font-size: .875rem; color: var(--graphite); }
   .viz-stage.no-webgl { display: none; }
   .topo-cap {
@@ -214,7 +218,7 @@
 
   /* Proyectos: filas, no tarjetas idénticas */
   .project {
-    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
     gap: clamp(1.5rem, 4vw, 3.5rem);
     padding: clamp(2rem, 4vw, 2.75rem) 0;
     border-top: 1px solid var(--rule);
@@ -312,8 +316,6 @@
     .stack { grid-template-columns: minmax(0, 1fr); }
     .timings { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: .75rem; }
     .topo-stage { aspect-ratio: 1 / 1; }
-    .viz-stage { aspect-ratio: 4 / 4.6; }
-    .viz-stage .topo-label { font-size: .6875rem; padding: .15rem .35rem; }
     .actions .btn { flex: 1 1 auto; justify-content: center; }
     .about-text p { font-size: 1.0625rem; }
     .hero h1 { font-size: clamp(3.25rem, 19vw, 5rem); }
@@ -416,13 +418,13 @@
               <li><b>2,500+</b><span data-i18n="p.asepad.i2">certificados verificables</span></li>
               <li><b>&lt;200 ms</b><span data-i18n="p.asepad.i3">por verificación</span></li>
             </ul>
+        
+            <figure class="viz">
+                  <div class="topo-stage viz-stage" data-scene="asepad"></div>
+                  <figcaption data-i18n="viz.asepad">Empresa → Cloudflare Tunnel → Nginx → contenedores de React y Node.js → PostgreSQL</figcaption>
+                </figure>
             <ul class="tags"><li>docker</li><li>nginx</li><li>postgresql</li><li>react</li><li>node.js</li><li>cloudflare</li></ul>
           </div>
-        
-        <figure class="viz">
-              <div class="topo-stage viz-stage" data-scene="asepad"></div>
-              <figcaption data-i18n="viz.asepad">Empresa → Cloudflare Tunnel → Nginx → contenedores de React y Node.js → PostgreSQL</figcaption>
-            </figure>
         </article>
 
         <article class="project">
@@ -439,13 +441,13 @@
               <li><b>300–400</b><span data-i18n="p.ejv.i2">personas por asamblea</span></li>
               <li><b>&lt;200 ms</b><span data-i18n="p.ejv.i3">de sincronización</span></li>
             </ul>
+        
+            <figure class="viz">
+                  <div class="topo-stage viz-stage" data-scene="eventosjv"></div>
+                  <figcaption data-i18n="viz.ejv">App móvil y panel web → Nginx y Firebase en tiempo real → backend Node.js → PostgreSQL y actas en PDF</figcaption>
+                </figure>
             <ul class="tags"><li>react</li><li>react-native</li><li>firebase</li><li>node.js</li><li>postgresql</li><li>docker</li></ul>
           </div>
-        
-        <figure class="viz">
-              <div class="topo-stage viz-stage" data-scene="eventosjv"></div>
-              <figcaption data-i18n="viz.ejv">App móvil y panel web → Nginx y Firebase en tiempo real → backend Node.js → PostgreSQL y actas en PDF</figcaption>
-            </figure>
         </article>
 
         <article class="project">
@@ -458,13 +460,13 @@
           </div>
           <div class="project-body">
             <p data-i18n="p.duts.desc">Tienda de cupcakes y galletas con commerce headless: Snipcart maneja carrito y checkout, y las reseñas corren en funciones serverless sin servidores que mantener.</p>
+        
+            <figure class="viz">
+                  <div class="topo-stage viz-stage" data-scene="dutsicakes"></div>
+                  <figcaption data-i18n="viz.duts">Cliente → Cloudflare CDN → tienda en React → Snipcart para el checkout y API Gateway → Lambda → DynamoDB para las reseñas</figcaption>
+                </figure>
             <ul class="tags"><li>react</li><li>snipcart</li><li>aws-lambda</li><li>api-gateway</li><li>dynamodb</li></ul>
           </div>
-        
-        <figure class="viz">
-              <div class="topo-stage viz-stage" data-scene="dutsicakes"></div>
-              <figcaption data-i18n="viz.duts">Cliente → Cloudflare CDN → tienda en React → Snipcart para el checkout y API Gateway → Lambda → DynamoDB para las reseñas</figcaption>
-            </figure>
         </article>
 
         <article class="project">
@@ -477,13 +479,13 @@
           </div>
           <div class="project-body">
             <p data-i18n="p.site.desc">HTML estático en S3 detrás de CloudFront, con DNS en Route 53 y certificado de ACM. GitHub Actions despliega con OIDC: no hay llaves de AWS guardadas en ningún lado.</p>
+        
+            <figure class="viz">
+                  <div class="topo-stage viz-stage" data-scene="site"></div>
+                  <figcaption data-i18n="viz.site">GitHub Actions → OIDC → IAM → S3 → CloudFront; el visitante resuelve con Route 53 y recibe la página desde CloudFront</figcaption>
+                </figure>
             <ul class="tags"><li>aws-s3</li><li>cloudfront</li><li>route-53</li><li>github-actions</li><li>oidc</li><li>three.js</li></ul>
           </div>
-        
-        <figure class="viz">
-              <div class="topo-stage viz-stage" data-scene="site"></div>
-              <figcaption data-i18n="viz.site">GitHub Actions → OIDC → IAM → S3 → CloudFront; el visitante resuelve con Route 53 y recibe la página desde CloudFront</figcaption>
-            </figure>
         </article>
       </div>
     </div>
@@ -1141,7 +1143,8 @@
       const def = SCENES[stage.dataset.scene];
       if (!def) return;
       const isHero = stage.dataset.scene === 'hero';
-      const portrait = !isHero && stage.clientWidth / Math.max(1, stage.clientHeight) < 1.1;
+      const isPortrait = () => !isHero && (stage.clientWidth < 560 || stage.clientWidth / Math.max(1, stage.clientHeight) < 1.1);
+      const portrait = isPortrait();
       // En pantallas angostas el flujo va de arriba hacia abajo
       const raw = (p) => portrait ? [p[1] * 1.55, -p[0] * 0.66, p[2] * 0.6] : p;
       const rp = Object.values(def.nodes).map((n) => raw(n.p));
@@ -1269,7 +1272,7 @@
 
       const entry = { stage, visible: false, step, render, resize, labels, nodes };
       const ro = new ResizeObserver(() => {
-        const nowPortrait = !isHero && stage.clientWidth / Math.max(1, stage.clientHeight) < 1.1;
+        const nowPortrait = isPortrait();
         if (nowPortrait !== portrait) { // cambió la orientación: reconstruir
           ro.disconnect(); renderer.dispose(); canvas.remove(); Object.values(labels).forEach((l) => l.remove());
           live.splice(live.indexOf(entry), 1);
