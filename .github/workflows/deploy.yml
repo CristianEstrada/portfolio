@@ -1,18 +1,22 @@
 name: Deploy to S3 + CloudFront
 
+
 on:
   push:
     branches: [main]
     paths: ["site/**", ".github/workflows/deploy.yml"]
   workflow_dispatch:
 
+
 permissions:
   id-token: write   # OIDC para asumir el rol de AWS
   contents: read
 
+
 concurrency:
   group: deploy
   cancel-in-progress: false
+
 
 jobs:
   deploy:
@@ -20,11 +24,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+
       - name: Configurar credenciales AWS (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
+
 
       - name: Sync a S3
         run: |
@@ -34,8 +40,9 @@ jobs:
             --cache-control "public, max-age=0, must-revalidate"
           # Resto de assets con caché larga
           aws s3 sync site/ "s3://${{ vars.S3_BUCKET }}" --delete \
-            --exclude "*.html" --exclude "cv.pdf" --exclude "CV" --exclude "cv" \
+            --exclude "mods-cliente-*.zip" --exclude "*.html" --exclude "cv.pdf" --exclude "CV" --exclude "cv" \
             --cache-control "public, max-age=31536000, immutable"
+
 
       - name: Publicar CV (/cv.pdf, /CV y /cv)
         run: |
@@ -52,8 +59,10 @@ jobs:
               --cache-control "public, max-age=300"
           done
 
+
       - name: Invalidar CloudFront
         run: |
           aws cloudfront create-invalidation \
             --distribution-id "${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}" \
             --paths "/*"
+
