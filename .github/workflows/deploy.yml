@@ -36,11 +36,11 @@ jobs:
         run: |
           # HTML sin caché larga para que los cambios se vean de inmediato
           aws s3 sync site/ "s3://${{ vars.S3_BUCKET }}" --delete \
-            --exclude "*" --include "*.html" \
+            --exclude "*" --include "*.html" --exclude "_tingo/*" \
             --cache-control "public, max-age=0, must-revalidate"
           # Resto de assets con caché larga
           aws s3 sync site/ "s3://${{ vars.S3_BUCKET }}" --delete \
-            --exclude "mods-cliente-*.zip" --exclude "*.html" --exclude "cv.pdf" --exclude "CV" --exclude "cv" \
+            --exclude "_tingo/*" --exclude "mods-cliente-*.zip" --exclude "*.html" --exclude "cv.pdf" --exclude "CV" --exclude "cv" \
             --cache-control "public, max-age=31536000, immutable"
 
 
